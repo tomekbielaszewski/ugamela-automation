@@ -1,6 +1,8 @@
 package pl.grizwold.pageobj;
 
+import lombok.SneakyThrows;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -26,9 +28,13 @@ public class Fleet1 {
                 .collect(Collectors.toList());
     }
 
+    @SneakyThrows
     public void next() {
         validateState();
-        $.findElement(By.cssSelector("#gameContent > center > form > table > tbody:nth-child(4) > tr:nth-child(2) > th > input")).click();
+        WebElement button = $.findElement(By.cssSelector("#gameContent > center > form > table > tbody:nth-child(4) > tr:nth-child(2) > th > input"));
+        ((JavascriptExecutor) $).executeScript("arguments[0].scrollIntoView(true);", button);
+        Thread.sleep(500);
+        button.click();
     }
 
     private void validateState() {
