@@ -3,6 +3,7 @@ package pl.grizwold.steps;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
+import pl.grizwold.Credentials;
 import pl.grizwold.pageobj.*;
 
 import java.util.HashMap;
@@ -17,8 +18,9 @@ public class GameSteps extends Abstract {
 
     @Before
     public void init() {
+        Credentials credentials = new Credentials();
         super.openOgame()
-                .login("", "");
+                .login(credentials.login, credentials.password);
     }
 
     @After
