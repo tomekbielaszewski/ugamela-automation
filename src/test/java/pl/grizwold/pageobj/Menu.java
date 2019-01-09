@@ -77,9 +77,11 @@ public class Menu {
             $.findElement(By.cssSelector("body > div:nth-child(7) > div.pf.l0.fl.w2.z1.style > table > tbody > tr:nth-child(16) > td > a")).click();
     }
 
-    public void messages() {
-        if (notOnPage("messages.php"))
+    public Messages messages() {
+        if (notOnPage("messages.php")) {
             $.findElement(By.cssSelector("#lm_msg")).click();
+        }
+        return new Messages($);
     }
 
     private boolean notOnPage(String page) {

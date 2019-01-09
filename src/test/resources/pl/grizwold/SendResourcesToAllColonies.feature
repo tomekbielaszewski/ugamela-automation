@@ -5,8 +5,8 @@ Feature: Send specific amount of resources to each colony
     # resources to send to each colony
     Given using state:
       | key     | value     |
-      | metal   | 197000000 |
-      | cristal | 50000000  |
+      | metal   | 368000000 |
+      | cristal | 147000000  |
       | deuter  | 125000    |
 
     Given go to 1 planet on planet selector

@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertTrue;
 
 public class GameSteps extends Abstract {
-    private Map<String, String> state = new HashMap<>();
+    private Map<String, Object> state = new HashMap<>();
 
     @Before
     public void init() {
@@ -31,6 +31,13 @@ public class GameSteps extends Abstract {
     @Given("^open fleet window$")
     public void fleet() {
         new Menu($).fleet();
+    }
+
+    @Given("^open spy reports$")
+    public void spyReports() {
+        this.state.put("spyReports", new Menu($)
+                .messages()
+                .spyReports());
     }
 
     @Given("^using state:$")
@@ -70,9 +77,9 @@ public class GameSteps extends Abstract {
 
     @Given("^using just enough ships \"([^\"]*)\" with capacity of (\\d+)$")
     public void fleet_step1_enaughShips(String shipName, int capacity) {
-        int metal = Integer.parseInt(state.get("metal"));
-        int cristal = Integer.parseInt(state.get("cristal"));
-        int deuter = Integer.parseInt(state.get("deuter"));
+        int metal = Integer.parseInt((String) state.get("metal"));
+        int cristal = Integer.parseInt((String) state.get("cristal"));
+        int deuter = Integer.parseInt((String) state.get("deuter"));
         int shipsAmount = (metal + cristal + deuter) / capacity;
 
         fleet_step1_ships(shipsAmount, shipName);
@@ -96,9 +103,9 @@ public class GameSteps extends Abstract {
 
     @Given("^send them on \"([^\"]*)\" mission with preconfigured amount of resources$")
     public void fleet_step3_missionWithConfiguredResources(String mission) {
-        int metal = Integer.parseInt(state.get("metal"));
-        int cristal = Integer.parseInt(state.get("cristal"));
-        int deuter = Integer.parseInt(state.get("deuter"));
+        int metal = Integer.parseInt((String) state.get("metal"));
+        int cristal = Integer.parseInt((String) state.get("cristal"));
+        int deuter = Integer.parseInt((String) state.get("deuter"));
 
         new Fleet3($)
                 .selectMission(mission)
