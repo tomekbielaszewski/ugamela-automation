@@ -50,7 +50,7 @@ public class GameSteps extends Abstract {
                 .stream()
                 .filter(f -> shipName.equals(f.shipName()))
                 .findFirst();
-        assertTrue(availableShip.isPresent());
+        assertTrue("There is no ship available \"" + shipName + "\"", availableShip.isPresent());
         availableShip.ifPresent(Fleet1.AvailableFleet::selectAll);
         fleet.next();
     }
@@ -63,7 +63,7 @@ public class GameSteps extends Abstract {
                 .filter(f -> shipName.equals(f.shipName()))
                 .filter(f -> shipAmount <= f.shipAmount())
                 .findFirst();
-        assertTrue(availableShip.isPresent());
+        assertTrue("There is not enough ships available \"" + shipName + "\"", availableShip.isPresent());
         availableShip.ifPresent(availableFleet -> availableFleet.select(shipAmount));
         fleet.next();
     }
