@@ -18,13 +18,10 @@ import static org.junit.Assert.assertTrue;
 
 @Log
 public class GameSteps extends Abstract {
-    private final String STATE__SPY_REPORTS = "spyReports";
-
-    private final String STATE__PLANET_ADDRESS = "address";
-
     private final String STATE__METAL = "metal";
     private final String STATE__CRYSTAL = "crystal";
     private final String STATE__DEUTERIUM = "deuterium";
+    private final String STATE__PLANET_ADDRESS = "address";
 
     private final String STATE__CONTEXT = "context";
 
