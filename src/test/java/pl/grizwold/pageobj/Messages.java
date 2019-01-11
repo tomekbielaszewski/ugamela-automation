@@ -3,7 +3,9 @@ package pl.grizwold.pageobj;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import pl.grizwold.pageobj.model.Address;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,10 +39,14 @@ public class Messages {
         private static final String DEFENCE_SELECTOR = "";
         private static final String FLEET_SELECTOR = "";
         private static final String ATTACK_LINK_SELECTOR = "";
-        private WebElement spyReport;
+        private static final String ADDRESS_SELECTOR = "";
+
+        private final WebElement spyReport;
+        private final Address address;
 
         public SpyReport(WebElement spyReport) {
             this.spyReport = spyReport;
+            this.address = new Address($.findElement(By.cssSelector(ADDRESS_SELECTOR)).getText());
         }
 
         public Fleet1 attack() {
@@ -65,6 +71,18 @@ public class Messages {
 
         public int deuterium() {
             return 0;
+        }
+
+        public boolean defenceRowVisible() {
+            return false;
+        }
+
+        public boolean fleetRowVisible() {
+            return false;
+        }
+
+        public Address address() {
+            return address;
         }
     }
 }
