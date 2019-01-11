@@ -290,4 +290,15 @@ public class GameSteps extends Abstract {
 
         state.put(STATE__CONTEXT, fleet4);
     }
+
+    @Given("^delete latest spy report$")
+    public void deleteLatestSpyReport() {
+        SpyReports spyReportsView = state.get(STATE__CONTEXT, SpyReports.class)
+                .orElse(new SpyReports($));
+
+        Optional<SpyReport> _latestSpyReport = spyReportsView.latest();
+        assertTrue("No spy reports found", _latestSpyReport.isPresent());
+
+        spyReportsView.deleteLatest();
+    }
 }

@@ -14,6 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class SpyReports extends Page {
     private static final String SPY_REPORTS_PAGE = "messages.php?mode=show&messcat=0";
     private static final String MESSAGES_SELECTOR = "#msgCont > tbody > tr > td.msgrow.tleft";
+    private static final String DELETE_MESSAGE_SELECTOR = "#msgCont > tbody > tr > td > span.fRigh > span:nth-child(3) > a.delete";
 
     public SpyReports(WebDriver $) {
         super($);
@@ -32,6 +33,11 @@ public class SpyReports extends Page {
 
     public Optional<SpyReport> latest() {
         return all().stream().findFirst();
+    }
+
+    public void deleteLatest() {
+        validateState();
+        $.findElement(By.cssSelector(DELETE_MESSAGE_SELECTOR)).click();
     }
 
     private void validateState() {
@@ -103,7 +109,7 @@ public class SpyReports extends Page {
         private long getResource(String resourceSelector) {
             String resource = this.spyReport.findElement(By.cssSelector(resourceSelector)).getText();
             resource = resource.replaceAll("\\.", "");
-            return Integer.parseInt(resource);
+            return Long.parseLong(resource);
         }
     }
 }
