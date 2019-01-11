@@ -13,9 +13,9 @@ import java.util.regex.Pattern;
 public class Address {
     private static final String ADDRESS_PATTERN = "\\[(?<galaxy>[\\d]+):(?<system>[\\d]+):(?<planet>[\\d]+)]";
 
-    private int planet;
-    private int system;
-    private int galaxy;
+    private String planet;
+    private String system;
+    private String galaxy;
 
     public Address(String address) {
         Pattern pattern = Pattern.compile(ADDRESS_PATTERN);
@@ -25,12 +25,8 @@ public class Address {
             throw new IllegalArgumentException("Planet address " + address + " does not match address pattern");
         }
 
-        String _galaxy = matcher.group("galaxy");
-        String _system = matcher.group("system");
-        String _planet = matcher.group("planet");
-
-        this.galaxy = Integer.parseInt(_galaxy);
-        this.system = Integer.parseInt(_system);
-        this.planet = Integer.parseInt(_planet);
+        this.galaxy = matcher.group("galaxy");
+        this.system = matcher.group("system");
+        this.planet = matcher.group("planet");
     }
 }
