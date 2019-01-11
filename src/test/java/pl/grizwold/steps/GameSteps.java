@@ -89,7 +89,7 @@ public class GameSteps extends Abstract {
     public void fleet_step2_destinationChoosing(int destinationIndex, int speed) {
         new Fleet2($)
                 .selectSpeed(speed)
-                .selectOwnDestination(destinationIndex)
+                .selectDestinationColony(destinationIndex)
                 .next();
     }
 
