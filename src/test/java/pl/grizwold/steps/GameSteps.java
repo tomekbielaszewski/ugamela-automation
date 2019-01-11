@@ -79,8 +79,8 @@ public class GameSteps extends Abstract {
     public void fleet_step1_enaughShips(String shipName, int capacity) {
         int metal = Integer.parseInt((String) state.get("metal"));
         int cristal = Integer.parseInt((String) state.get("cristal"));
-        int deuter = Integer.parseInt((String) state.get("deuter"));
-        int shipsAmount = (metal + cristal + deuter) / capacity;
+        int deuterium = Integer.parseInt((String) state.get("deuterium"));
+        int shipsAmount = (metal + cristal + deuterium) / capacity;
 
         fleet_step1_ships(shipsAmount, shipName);
     }
@@ -105,11 +105,11 @@ public class GameSteps extends Abstract {
     public void fleet_step3_missionWithConfiguredResources(String mission) {
         int metal = Integer.parseInt((String) state.get("metal"));
         int cristal = Integer.parseInt((String) state.get("cristal"));
-        int deuter = Integer.parseInt((String) state.get("deuter"));
+        int deuterium = Integer.parseInt((String) state.get("deuterium"));
 
         new Fleet3($)
                 .selectMission(mission)
-                .loadResources(metal, cristal, deuter)
+                .loadResources(metal, cristal, deuterium)
                 .next();
     }
 

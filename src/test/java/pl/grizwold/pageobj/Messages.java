@@ -33,7 +33,7 @@ public class Messages {
     public class SpyReport {
         private static final String METAL_SELECTOR = "table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(2)";
         private static final String CRISTAL_SELECTOR = "";
-        private static final String DEUTER_SELECTOR = "";
+        private static final String DEUTERIUM_SELECTOR = "";
         private static final String DEFENCE_SELECTOR = "";
         private static final String FLEET_SELECTOR = "";
         private static final String ATTACK_LINK_SELECTOR = "";
@@ -63,7 +63,7 @@ public class Messages {
             return 0;
         }
 
-        public int deuter() {
+        public int deuterium() {
             return 0;
         }
     }

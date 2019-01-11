@@ -14,7 +14,7 @@ public class Fleet3 {
     private static final String LOAD_ALL_RESOURCES_SELECTOR = "#setMaxAll";
     private static final String METAL_AMOUNT_SELECTOR = "#gTb > tbody > tr:nth-child(2) > th:nth-child(2) > table > tbody:nth-child(1) > tr:nth-child(2) > th:nth-child(3) > input";
     private static final String CRISTAL_AMOUNT_SELECTOR = "#gTb > tbody > tr:nth-child(2) > th:nth-child(2) > table > tbody:nth-child(1) > tr:nth-child(3) > th:nth-child(3) > input";
-    private static final String DEUTER_AMOUNT_SELECTOR = "#gTb > tbody > tr:nth-child(2) > th:nth-child(2) > table > tbody:nth-child(1) > tr:nth-child(4) > th:nth-child(3) > input";
+    private static final String DEUTERIUM_AMOUNT_SELECTOR = "#gTb > tbody > tr:nth-child(2) > th:nth-child(2) > table > tbody:nth-child(1) > tr:nth-child(4) > th:nth-child(3) > input";
     private static final Map<String, String> MISSION_SELECTORS = new HashMap<String, String>(){{
         put("Attack", "#ms_1");
         put("Transport", "#ms_3");
@@ -45,11 +45,11 @@ public class Fleet3 {
         return this;
     }
 
-    public Fleet3 loadResources(int metal, int cristal, int deuter) {
+    public Fleet3 loadResources(int metal, int cristal, int deuterium) {
         validateState();
         $.findElement(By.cssSelector(METAL_AMOUNT_SELECTOR)).sendKeys(String.valueOf(metal));
         $.findElement(By.cssSelector(CRISTAL_AMOUNT_SELECTOR)).sendKeys(String.valueOf(cristal));
-        $.findElement(By.cssSelector(DEUTER_AMOUNT_SELECTOR)).sendKeys(String.valueOf(deuter));
+        $.findElement(By.cssSelector(DEUTERIUM_AMOUNT_SELECTOR)).sendKeys(String.valueOf(deuterium));
         return this;
     }
 

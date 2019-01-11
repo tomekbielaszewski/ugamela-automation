@@ -7,7 +7,7 @@ Feature: Send specific amount of resources to each colony
       | key     | value     |
       | metal   | 368000000 |
       | cristal | 147000000  |
-      | deuter  | 125000    |
+      | deuterium  | 125000    |
 
     Given go to 1 planet on planet selector
 
