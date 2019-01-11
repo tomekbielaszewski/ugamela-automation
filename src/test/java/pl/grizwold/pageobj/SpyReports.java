@@ -49,15 +49,16 @@ public class SpyReports extends Page {
 
         private final WebElement spyReport;
         private final Address address;
+        private final String attackLink;
 
         public SpyReport(WebElement spyReport) {
             this.spyReport = spyReport;
             this.address = new Address(spyReport.findElement(By.cssSelector(ADDRESS_SELECTOR)).getText());
+            this.attackLink = this.spyReport.findElement(By.cssSelector(ATTACK_LINK_SELECTOR)).getAttribute("href");
         }
 
         public Fleet1 attack() {
-            String attackSubpageLink = this.spyReport.findElement(By.cssSelector(ATTACK_LINK_SELECTOR)).getAttribute("href");
-            open(attackSubpageLink);
+            $.get(this.attackLink);
             return new Fleet1(SpyReports.this.$);
         }
 
