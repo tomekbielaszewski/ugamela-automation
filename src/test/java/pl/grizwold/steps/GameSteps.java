@@ -188,7 +188,7 @@ public class GameSteps extends Abstract {
 
             loot /= 2;
             shipsAmount = loot / capacity;
-        } while (shipsAmount < minimumShips);
+        } while (shipsAmount >= minimumShips);
     }
 
     @Given("^send multiple attacks on saved address using just enough \\(but not less than (\\d+)\\) ships \"([^\"]*)\" with capacity of (\\d+)$")
@@ -209,7 +209,7 @@ public class GameSteps extends Abstract {
 
             loot /= 2;
             shipsAmount = loot / capacity;
-        } while (shipsAmount < minimumShips);
+        } while (shipsAmount >= minimumShips);
     }
 
     @Given("^on fleet step 2: direct ships to saved destination with speed (\\d+)$")
