@@ -42,7 +42,7 @@ public class Fleet1 extends Page {
     }
 
     private void validateState() {
-        assertTrue($.getCurrentUrl().endsWith("fleet.php"));
+        assertTrue($.getCurrentUrl().contains("fleet.php"));
     }
 
     public class AvailableFleet {
