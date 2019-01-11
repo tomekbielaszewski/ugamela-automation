@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class Fleet2 {
+public class Fleet2 extends Page {
     private static final String OWN_DESTINATION_DROP_DOWN_SELECTOR = "#fl_sel1";
     private static final String OWN_DESTINATION_OPTION_SELECTOR = "#fl_sel1 > option:nth-child(%d)";
     private static final String ADDRESS_GALAXY_SELECTOR = "#galaxy_selector";
@@ -29,10 +29,8 @@ public class Fleet2 {
         put(10, "#defCursor > a:nth-child(19)");
     }};
 
-    private final WebDriver $;
-
-    public Fleet2(WebDriver webDriver) {
-        this.$ = webDriver;
+    public Fleet2(Fleet1 parent) {
+        super(parent.$);
     }
 
     public Fleet2 selectDestinationColony(int index) {
@@ -50,10 +48,11 @@ public class Fleet2 {
         return this;
     }
 
-    public void next() {
+    public Fleet3 next() {
         validateState();
         validateConsumption();
         $.findElement(By.cssSelector(SUBMIT_BUTTON)).click();
+        return new Fleet3(this);
     }
 
     public Fleet2 selectDestination(Address address) {

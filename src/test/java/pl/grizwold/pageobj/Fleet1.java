@@ -11,13 +11,16 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertTrue;
 
-public class Fleet1 {
+public class Fleet1 extends Page {
+    private static final String FLEET_PAGE = "fleet.php";
+
     private static final String STATIONED_FLEET_TABLE_SELECTOR = "#gameContent > center > form > table > tbody:nth-child(1)";
 
-    private final WebDriver $;
-
-    public Fleet1(WebDriver webDriver) {
-        this.$ = webDriver;
+    public Fleet1(WebDriver $) {
+        super($);
+        if(!onUrlLike(FLEET_PAGE)) {
+            open(FLEET_PAGE);
+        }
     }
 
     public List<AvailableFleet> availableShips() {
@@ -29,12 +32,13 @@ public class Fleet1 {
     }
 
     @SneakyThrows
-    public void next() {
+    public Fleet2 next() {
         validateState();
         WebElement button = $.findElement(By.cssSelector("#gameContent > center > form > table > tbody:nth-child(4) > tr:nth-child(2) > th > input"));
         ((JavascriptExecutor) $).executeScript("arguments[0].scrollIntoView(true);", button);
         Thread.sleep(500);
         button.click();
+        return new Fleet2(this);
     }
 
     private void validateState() {

@@ -1,7 +1,6 @@
 package pl.grizwold.pageobj;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +8,7 @@ import java.util.Map;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class Fleet3 {
+public class Fleet3 extends Page {
     private static final String SUBMIT_BUTTON = "#gTb > tbody > tr:nth-child(5) > th > input.SendButtom.lime";
     private static final String LOAD_ALL_RESOURCES_SELECTOR = "#setMaxAll";
     private static final String METAL_AMOUNT_SELECTOR = "#gTb > tbody > tr:nth-child(2) > th:nth-child(2) > table > tbody:nth-child(1) > tr:nth-child(2) > th:nth-child(3) > input";
@@ -24,10 +23,8 @@ public class Fleet3 {
         put("Destroy", "#ms_9");
     }};
 
-    private final WebDriver $;
-
-    public Fleet3(WebDriver webDriver) {
-        this.$ = webDriver;
+    public Fleet3(Fleet2 parent) {
+        super(parent.$);
     }
 
     public Fleet3 selectMission(String mission) {
@@ -53,9 +50,10 @@ public class Fleet3 {
         return this;
     }
 
-    public void next() {
+    public Fleet4 next() {
         validateState();
         $.findElement(By.cssSelector(SUBMIT_BUTTON)).click();
+        return new Fleet4(this);
     }
 
     private void validateState() {
