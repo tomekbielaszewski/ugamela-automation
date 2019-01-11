@@ -6,14 +6,13 @@ import org.openqa.selenium.WebDriver;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class Fleet2 {
     private static final String OWN_DESTINATION_DROP_DOWN_SELECTOR = "#fl_sel1";
     private static final String OWN_DESTINATION_OPTION_SELECTOR = "#fl_sel1 > option:nth-child(%d)";
     private static final String SUBMIT_BUTTON = "#thisForm > table > tbody:nth-child(3) > tr:nth-child(2) > th > input.SendButtom.lime";
-    private static final Map<Integer, String> SPEED_SELECTORS = new HashMap<Integer, String>(){{
+    private static final Map<Integer, String> SPEED_SELECTORS = new HashMap<Integer, String>() {{
         put(100, "#defCursor > a:nth-child(1)");
         put(90, "#defCursor > a:nth-child(3)");
         put(80, "#defCursor > a:nth-child(5)");
@@ -49,7 +48,12 @@ public class Fleet2 {
 
     public void next() {
         validateState();
+        validateConsumption();
         $.findElement(By.cssSelector(SUBMIT_BUTTON)).click();
+    }
+
+    private void validateConsumption() {
+        assertNotEquals("Not enough deuterium", "red", $.findElement(By.cssSelector("#consumption > b")).getAttribute("class"));
     }
 
     private void validateState() {
