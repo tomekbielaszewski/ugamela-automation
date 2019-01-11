@@ -300,5 +300,6 @@ public class GameSteps extends Abstract {
         assertTrue("No spy reports found", _latestSpyReport.isPresent());
 
         spyReportsView.deleteLatest();
+        state.put(STATE__CONTEXT, spyReportsView);
     }
 }
