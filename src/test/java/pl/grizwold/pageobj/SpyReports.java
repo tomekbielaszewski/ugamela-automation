@@ -50,11 +50,49 @@ public class SpyReports extends Page {
         private final WebElement spyReport;
         private final Address address;
         private final String attackLink;
+        private final long metal;
+        private final long cristal;
+        private final long deuterium;
 
         public SpyReport(WebElement spyReport) {
             this.spyReport = spyReport;
             this.address = new Address(spyReport.findElement(By.cssSelector(ADDRESS_SELECTOR)).getText());
             this.attackLink = this.spyReport.findElement(By.cssSelector(ATTACK_LINK_SELECTOR)).getAttribute("href");
+            this.metal = getResource(METAL_SELECTOR);
+            this.cristal = getResource(CRISTAL_SELECTOR);
+            this.deuterium = getResource(DEUTERIUM_SELECTOR);
+        }
+
+        public Address address() {
+            return address;
+        }
+
+        public long metal() {
+            return metal;
+        }
+
+        public long cristal() {
+            return cristal;
+        }
+
+        public long deuterium() {
+            return deuterium;
+        }
+
+        public boolean fleetRowVisible() {
+            return true;
+        }
+
+        public boolean hasFleet() {
+            return false;
+        }
+
+        public boolean defenceRowVisible() {
+            return true;
+        }
+
+        public boolean hasDefence() {
+            return false;
         }
 
         public Fleet1 attack() {
@@ -62,42 +100,10 @@ public class SpyReports extends Page {
             return new Fleet1(SpyReports.this.$);
         }
 
-        public boolean hasFleet() {
-            return false;
-        }
-
-        public boolean hasDefence() {
-            return false;
-        }
-
-        public long metal() {
-            String metalStr = this.spyReport.findElement(By.cssSelector(METAL_SELECTOR)).getText();
-            metalStr = metalStr.replaceAll("\\.", "");
-            return Long.parseLong(metalStr);
-        }
-
-        public long cristal() {
-            String cristalStr = this.spyReport.findElement(By.cssSelector(CRISTAL_SELECTOR)).getText();
-            cristalStr = cristalStr.replaceAll("\\.", "");
-            return Integer.parseInt(cristalStr);
-        }
-
-        public long deuterium() {
-            String deuteriumStr = this.spyReport.findElement(By.cssSelector(DEUTERIUM_SELECTOR)).getText();
-            deuteriumStr = deuteriumStr.replaceAll("\\.", "");
-            return Integer.parseInt(deuteriumStr);
-        }
-
-        public boolean defenceRowVisible() {
-            return true;
-        }
-
-        public boolean fleetRowVisible() {
-            return true;
-        }
-
-        public Address address() {
-            return address;
+        private long getResource(String resourceSelector) {
+            String resource = this.spyReport.findElement(By.cssSelector(resourceSelector)).getText();
+            resource = resource.replaceAll("\\.", "");
+            return Integer.parseInt(resource);
         }
     }
 }
