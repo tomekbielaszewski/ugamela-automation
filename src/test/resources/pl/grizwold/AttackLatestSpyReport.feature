@@ -1,9 +1,6 @@
-Feature: Attack planet on latest spy report
+Feature: Send multiple attacks to planet on latest spy report
 
-  Scenario:
-    Given open spy reports
-    And latest spy report has no defence
-    And latest spy report has no fleet
-    And remember resources amount on latest spy report
-    And remember address on latest spy report
-    Then send multiple attacks on saved address using just enough (but not less than 300) ships "Mega Transporter" with capacity of 125000
+  Scenario: Send multiple attacks to planet on latest spy report
+    Given go to planet on index number = 1 on planet selector
+    Then send multiple attacks to target on latest spy report using just enough (but not less than 300) ships "Mega transporter" with capacity of 125000
+    Then delete latest spy report
