@@ -4,54 +4,45 @@ Feature: Send specific amount of resources to each colony
 
     # resources to send to each colony
     Given using state:
-      | key     | value     |
-      | metal   | 368000000 |
-      | cristal | 147000000  |
-      | deuterium  | 125000    |
+      | key       | value |
+      | metal     | 100000  |
+      | crystal   | 200000  |
+      | deuterium | 300000 |
 
-    Given go to 1 planet on planet selector
+    Given go to planet on index number = 1 on planet selector
 
-    Then open fleet window
-    Then using just enough ships "Mega transporter" with capacity of 125000
-    Then send them to 2 planet on fleet destination selector with speed 100
-    Then send them on "Transport" mission with preconfigured amount of resources
+    Then on fleet step 1: use just enough ships "Mega transporter" with capacity of 125000
+    And on fleet step 2: direct ships to colony on index 2
+    And on fleet step 3: send ships on "Transport" mission with saved amount of resources
 
-    Then open fleet window
-    Then using just enough ships "Mega transporter" with capacity of 125000
-    Then send them to 3 planet on fleet destination selector with speed 100
-    Then send them on "Transport" mission with preconfigured amount of resources
+    Then on fleet step 1: use just enough ships "Mega transporter" with capacity of 125000
+    And on fleet step 2: direct ships to colony on index 3
+    And on fleet step 3: send ships on "Transport" mission with saved amount of resources
 
-    Then open fleet window
-    Then using just enough ships "Mega transporter" with capacity of 125000
-    Then send them to 4 planet on fleet destination selector with speed 100
-    Then send them on "Transport" mission with preconfigured amount of resources
+    Then on fleet step 1: use just enough ships "Mega transporter" with capacity of 125000
+    And on fleet step 2: direct ships to colony on index 4
+    And on fleet step 3: send ships on "Transport" mission with saved amount of resources
 
-    Then open fleet window
-    Then using just enough ships "Mega transporter" with capacity of 125000
-    Then send them to 5 planet on fleet destination selector with speed 100
-    Then send them on "Transport" mission with preconfigured amount of resources
+    Then on fleet step 1: use just enough ships "Mega transporter" with capacity of 125000
+    And on fleet step 2: direct ships to colony on index 5
+    And on fleet step 3: send ships on "Transport" mission with saved amount of resources
 
-    Then open fleet window
-    Then using just enough ships "Mega transporter" with capacity of 125000
-    Then send them to 6 planet on fleet destination selector with speed 100
-    Then send them on "Transport" mission with preconfigured amount of resources
+    Then on fleet step 1: use just enough ships "Mega transporter" with capacity of 125000
+    And on fleet step 2: direct ships to colony on index 6
+    And on fleet step 3: send ships on "Transport" mission with saved amount of resources
 
-    Then open fleet window
-    Then using just enough ships "Mega transporter" with capacity of 125000
-    Then send them to 7 planet on fleet destination selector with speed 100
-    Then send them on "Transport" mission with preconfigured amount of resources
+    Then on fleet step 1: use just enough ships "Mega transporter" with capacity of 125000
+    And on fleet step 2: direct ships to colony on index 7
+    And on fleet step 3: send ships on "Transport" mission with saved amount of resources
 
-    Then open fleet window
-    Then using just enough ships "Mega transporter" with capacity of 125000
-    Then send them to 8 planet on fleet destination selector with speed 100
-    Then send them on "Transport" mission with preconfigured amount of resources
+    Then on fleet step 1: use just enough ships "Mega transporter" with capacity of 125000
+    And on fleet step 2: direct ships to colony on index 8
+    And on fleet step 3: send ships on "Transport" mission with saved amount of resources
 
-    Then open fleet window
-    Then using just enough ships "Mega transporter" with capacity of 125000
-    Then send them to 9 planet on fleet destination selector with speed 100
-    Then send them on "Transport" mission with preconfigured amount of resources
+    Then on fleet step 1: use just enough ships "Mega transporter" with capacity of 125000
+    And on fleet step 2: direct ships to colony on index 9
+    And on fleet step 3: send ships on "Transport" mission with saved amount of resources
 
-    Then open fleet window
-    Then using just enough ships "Mega transporter" with capacity of 125000
-    Then send them to 10 planet on fleet destination selector with speed 100
-    Then send them on "Transport" mission with preconfigured amount of resources
+    Then on fleet step 1: use just enough ships "Mega transporter" with capacity of 125000
+    And on fleet step 2: direct ships to colony on index 10
+    And on fleet step 3: send ships on "Transport" mission with saved amount of resources

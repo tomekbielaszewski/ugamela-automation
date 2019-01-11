@@ -21,12 +21,12 @@ public abstract class Abstract {
         this.$.manage().window().maximize();
     }
 
-    public Abstract openOgame() {
+    protected Abstract openOgame() {
         $.get(LOGIN_URL);
         return this;
     }
 
-    public Abstract login(String login, String password) {
+    protected Abstract login(String login, String password) {
         assertThat($.getCurrentUrl(), Is.is(LOGIN_URL));
         $.findElement(By.cssSelector("#login_input > table > tbody > tr > td > form > input:nth-child(4)")).sendKeys(login);
         $.findElement(By.cssSelector("#login_input > table > tbody > tr > td > form > input:nth-child(5)")).sendKeys(password);
