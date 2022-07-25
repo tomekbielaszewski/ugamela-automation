@@ -52,7 +52,7 @@ public class SpyReports extends Page {
         private static final String DEUTERIUM_SELECTOR = "table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(2)";
         private static final String FLEET_SELECTOR = "";
         private static final String DEFENCE_SELECTOR = "";
-        private static final String ATTACK_LINK_SELECTOR = "table:nth-child(9) > tbody > tr > td > a";
+        private static final String ATTACK_LINK_SELECTOR = "table:nth-child(3) > tbody > tr > td > a";
 
         private final WebElement spyReport;
         private final Address address;
