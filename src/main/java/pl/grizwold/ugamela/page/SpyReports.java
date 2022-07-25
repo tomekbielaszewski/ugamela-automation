@@ -52,7 +52,7 @@ public class SpyReports extends Page {
         private static final String DEUTERIUM_SELECTOR = "table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(2)";
         private static final String FLEET_SELECTOR = "";
         private static final String DEFENCE_SELECTOR = "";
-        private static final String ATTACK_LINK_SELECTOR = "table:nth-child(3) > tbody > tr > td > a";
+        private static final String ATTACK_LINK_SELECTOR = "table:nth-child(9) > tbody > tr > td > a";
 
         private final WebElement spyReport;
         private final Address address;
@@ -64,7 +64,7 @@ public class SpyReports extends Page {
         public SpyReport(WebElement spyReport) {
             this.spyReport = spyReport;
             this.address = new Address(spyReport.findElement(By.cssSelector(ADDRESS_SELECTOR)).getText());
-            this.attackLink = this.spyReport.findElement(By.cssSelector(ATTACK_LINK_SELECTOR)).getAttribute("href");
+            this.attackLink = this.spyReport.findElement(By.linkText("Napadaj")).getAttribute("href");
             this.metal = getResource(METAL_SELECTOR);
             this.cristal = getResource(CRISTAL_SELECTOR);
             this.deuterium = getResource(DEUTERIUM_SELECTOR);
