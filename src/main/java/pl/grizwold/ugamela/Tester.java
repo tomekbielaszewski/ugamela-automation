@@ -38,7 +38,8 @@ public class Tester {
 
         Credentials credentials = new Credentials();
         UgamelaSession session = new UgamelaSession($);
-        session.login(credentials.login, credentials.password);
+        if (!session.isLoggedIn())
+            session.login(credentials.login, credentials.password);
 
         List<SpyReports.SpyReport> spyReports = new SpyReports(session).all()
                 .stream()
