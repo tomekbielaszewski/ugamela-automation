@@ -7,7 +7,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import pl.grizwold.ugamela.page.Fleet1;
 import pl.grizwold.ugamela.page.Fleet2;
-import pl.grizwold.ugamela.page.Fleet4;
 import pl.grizwold.ugamela.page.SpyReports;
 
 import java.io.BufferedReader;
@@ -18,7 +17,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 import static java.util.function.Predicate.not;
@@ -62,38 +60,40 @@ public class Tester {
     }
 
     private static void farmFromSpyReports(UgamelaSession session) {
-        Optional<SpyReports.SpyReport> spyReport = new SpyReports(session).all()
+        new SpyReports(session).all()
                 .stream()
                 .filter(SpyReports.SpyReport::defenceRowVisible)
                 .filter(SpyReports.SpyReport::fleetRowVisible)
                 .filter(not(SpyReports.SpyReport::hasDefence))
                 .filter(not(SpyReports.SpyReport::hasFleet))
-                .findFirst();
+                .forEach(Tester::farmFromSpyReport);
+    }
 
+    private static void farmFromSpyReport(SpyReports.SpyReport spyReport) {
         long capacity = 125000;
         long minimumShips = 200;
         String shipName = "Mega transporter";
 
-        if (spyReport.isPresent()) {
-            SpyReports.SpyReport spy = spyReport.get();
-            long resourcesSum = (spy.metal() + spy.cristal() + spy.deuterium());
-            long loot = resourcesSum / 2;
-            long shipsAmount = loot / capacity;
+        long resourcesSum = (spyReport.metal() + spyReport.cristal() + spyReport.deuterium());
+        long loot = resourcesSum / 2;
+        long shipsAmount = loot / capacity;
 
-            do {
-                log.info(String.format("Sending %d of %s ships on attack mission", shipsAmount, shipName));
+        do {
+            log.info(String.format("Sending %d of %s ships on attack mission", shipsAmount, shipName));
 
-                Fleet1 fleet1 = spy.attack();
+            Fleet1 fleet1 = spyReport.attack();
 
-                chooseGivenAmountOfShips((int) shipsAmount, shipName, fleet1)
-                        .next()
-                        .selectMission("Attack")
-                        .next();
+            chooseGivenAmountOfShips((int) shipsAmount, shipName, fleet1)
+                    .next()
+                    .selectMission("Attack")
+                    .next();
 
-                loot /= 2;
-                shipsAmount = loot / capacity;
-            } while (shipsAmount >= minimumShips);
-        }
+            loot /= 2;
+            shipsAmount = loot / capacity;
+        } while (shipsAmount >= minimumShips);
+
+        //TODO delete report
+
     }
 
     public static Fleet2 chooseGivenAmountOfShips(int shipAmount, String shipName, Fleet1 fleet) {
