@@ -1,9 +1,13 @@
 package pl.grizwold.ugamela;
 
 import com.google.gson.Gson;
+import lombok.extern.java.Log;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import pl.grizwold.ugamela.page.Fleet1;
+import pl.grizwold.ugamela.page.Fleet2;
+import pl.grizwold.ugamela.page.Fleet4;
 import pl.grizwold.ugamela.page.SpyReports;
 
 import java.io.BufferedReader;
@@ -15,10 +19,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static java.util.function.Predicate.not;
 
+@Log
 public class Tester {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
@@ -41,14 +46,7 @@ public class Tester {
         if (!session.isLoggedIn())
             session.login(credentials.login, credentials.password);
 
-        List<SpyReports.SpyReport> spyReports = new SpyReports(session).all()
-                .stream()
-                .filter(SpyReports.SpyReport::defenceRowVisible)
-                .filter(SpyReports.SpyReport::fleetRowVisible)
-                .filter(not(SpyReports.SpyReport::hasDefence))
-                .filter(not(SpyReports.SpyReport::hasFleet)).toList();
-
-        System.out.println(spyReports.size());
+        farmFromSpyReports(session);
 
 //        Buildings buildings = new Buildings(session);
 //        boolean isUpgradable;
@@ -61,6 +59,55 @@ public class Tester {
 //            else if (plantLevel >= crystalLevel) isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_CRYSTAL_MINE);
 //            else isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_SOLAR_PLANT);
 //        } while (isUpgradable);
+    }
+
+    private static void farmFromSpyReports(UgamelaSession session) {
+        Optional<SpyReports.SpyReport> spyReport = new SpyReports(session).all()
+                .stream()
+                .filter(SpyReports.SpyReport::defenceRowVisible)
+                .filter(SpyReports.SpyReport::fleetRowVisible)
+                .filter(not(SpyReports.SpyReport::hasDefence))
+                .filter(not(SpyReports.SpyReport::hasFleet))
+                .findFirst();
+
+        long capacity = 125000;
+        long minimumShips = 200;
+        String shipName = "Mega transporter";
+
+        if (spyReport.isPresent()) {
+            SpyReports.SpyReport spy = spyReport.get();
+            long resourcesSum = (spy.metal() + spy.cristal() + spy.deuterium());
+            long loot = resourcesSum / 2;
+            long shipsAmount = loot / capacity;
+
+            do {
+                log.info(String.format("Sending %d of %s ships on attack mission", shipsAmount, shipName));
+
+                Fleet1 fleet1 = spy.attack();
+
+                chooseGivenAmountOfShips((int) shipsAmount, shipName, fleet1)
+                        .next()
+                        .selectMission("Attack")
+                        .next();
+
+                loot /= 2;
+                shipsAmount = loot / capacity;
+            } while (shipsAmount >= minimumShips);
+        }
+    }
+
+    public static Fleet2 chooseGivenAmountOfShips(int shipAmount, String shipName, Fleet1 fleet) {
+        Optional<Fleet1.AvailableFleet> availableShip = fleet.availableShips()
+                .stream()
+                .filter(f -> shipName.equals(f.shipName()))
+                .filter(f -> shipAmount <= f.shipAmount())
+                .findFirst();
+
+        if (availableShip.isEmpty())
+            throw new IllegalStateException("There is not enough ships available \"" + shipName + "\"");
+        availableShip.ifPresent(availableFleet -> availableFleet.select(shipAmount));
+
+        return fleet.next();
     }
 
     private static String getRunningProfileAutomationUrl(String profileId) throws IOException {
