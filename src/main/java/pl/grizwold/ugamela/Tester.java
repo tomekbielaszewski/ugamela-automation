@@ -46,8 +46,7 @@ public class Tester {
                 .filter(SpyReports.SpyReport::defenceRowVisible)
                 .filter(SpyReports.SpyReport::fleetRowVisible)
                 .filter(not(SpyReports.SpyReport::hasDefence))
-                .filter(not(SpyReports.SpyReport::hasFleet))
-                .collect(Collectors.toList());
+                .filter(not(SpyReports.SpyReport::hasFleet)).toList();
 
         System.out.println(spyReports.size());
 
