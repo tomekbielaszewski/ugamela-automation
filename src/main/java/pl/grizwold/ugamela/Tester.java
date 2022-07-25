@@ -1,16 +1,19 @@
 package pl.grizwold.ugamela;
 
+import com.google.gson.Gson;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import pl.grizwold.ugamela.page.Buildings;
 import pl.grizwold.ugamela.page.SpyReports;
 
-import java.net.MalformedURLException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,39 +21,101 @@ import static java.util.function.Predicate.not;
 
 public class Tester {
 
-    public static void main(String[] args) throws MalformedURLException, URISyntaxException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         WebDriver $;
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36");
-        $ = new ChromeDriver(options);
-//        $ = new RemoteWebDriver(new URI("http://localhost:32003").toURL(), new ChromeOptions());
+//        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--remote-debugging-port=32003");
+//        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36");
+//        $ = new ChromeDriver(options);
+
+        String profileId = "cc0b9187-c4e5-4e1f-8b52-29804bca47c7";
+        String runningProfileAutomationUrl = getRunningProfileAutomationUrl(profileId);
+        if (runningProfileAutomationUrl.equals("Profile cc0b9187-c4e5-4e1f-8b52-29804bca47c7 is not running or not automated"))
+            runningProfileAutomationUrl = startProfile(profileId);
+        $ = new RemoteWebDriver(new URI(runningProfileAutomationUrl).toURL(), new ChromeOptions());
         $.manage().window().maximize();
 
         Credentials credentials = new Credentials();
         UgamelaSession session = new UgamelaSession($);
         session.login(credentials.login, credentials.password);
 
-//        List<SpyReports.SpyReport> spyReports = new SpyReports(session).all()
-//                .stream()
-//                .filter(SpyReports.SpyReport::defenceRowVisible)
-//                .filter(SpyReports.SpyReport::fleetRowVisible)
-//                .filter(not(SpyReports.SpyReport::hasDefence))
-//                .filter(not(SpyReports.SpyReport::hasFleet))
-//                .collect(Collectors.toList());
+        List<SpyReports.SpyReport> spyReports = new SpyReports(session).all()
+                .stream()
+                .filter(SpyReports.SpyReport::defenceRowVisible)
+                .filter(SpyReports.SpyReport::fleetRowVisible)
+                .filter(not(SpyReports.SpyReport::hasDefence))
+                .filter(not(SpyReports.SpyReport::hasFleet))
+                .collect(Collectors.toList());
+
+        System.out.println(spyReports.size());
+
+//        Buildings buildings = new Buildings(session);
+//        boolean isUpgradable;
+//        do {
+//            int plantLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_SOLAR_PLANT);
+//            int metalLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_METAL_MINE);
+//            int crystalLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_CRYSTAL_MINE);
 //
-//        System.out.println(spyReports.size());
+//            if (plantLevel >= metalLevel) isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_METAL_MINE);
+//            else if (plantLevel >= crystalLevel) isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_CRYSTAL_MINE);
+//            else isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_SOLAR_PLANT);
+//        } while (isUpgradable);
+    }
 
-        Buildings buildings = new Buildings(session);
-        boolean isUpgradable;
-        do {
-            int plantLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_SOLAR_PLANT);
-            int metalLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_METAL_MINE);
-            int crystalLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_CRYSTAL_MINE);
+    private static String getRunningProfileAutomationUrl(String profileId) throws IOException {
+        /*Send GET request to start the browser profile by profileId. Returns response in the following format:
+        '{"status":"OK","value":"http://127.0.0.1:XXXXX"}', where XXXXX is the localhost port on which browser profile is
+        launched. Please make sure that you have Multilogin listening port set to 35000. Otherwise please change the port
+        value in the url string*/
+        String url = "http://127.0.0.1:32002/api/v1/profile/selenium?profileId=" + profileId;
 
-            if (plantLevel >= metalLevel) isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_METAL_MINE);
-            else if (plantLevel >= crystalLevel) isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_CRYSTAL_MINE);
-            else isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_SOLAR_PLANT);
-        } while (isUpgradable);
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        con.setRequestMethod("GET");
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        //Get JSON text from the response and return the value by key "value"
+        Gson gson = new Gson();
+        HashMap hashMap = gson.fromJson(response.toString(), HashMap.class);
+        return hashMap.get("value").toString();
+    }
+
+    private static String startProfile(String profileId) throws IOException {
+        /*Send GET request to start the browser profile by profileId. Returns response in the following format:
+        '{"status":"OK","value":"http://127.0.0.1:XXXXX"}', where XXXXX is the localhost port on which browser profile is
+        launched. Please make sure that you have Multilogin listening port set to 35000. Otherwise please change the port
+        value in the url string*/
+        String url = "http://127.0.0.1:32002/api/v1/profile/start?automation=true&profileId=" + profileId;
+
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        con.setRequestMethod("GET");
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        //Get JSON text from the response and return the value by key "value"
+        Gson gson = new Gson();
+        HashMap hashMap = gson.fromJson(response.toString(), HashMap.class);
+        return hashMap.get("value").toString();
     }
 }
