@@ -31,7 +31,7 @@ public class Tester {
 
         String profileId = "cc0b9187-c4e5-4e1f-8b52-29804bca47c7";
         String runningProfileAutomationUrl = getRunningProfileAutomationUrl(profileId);
-        if (runningProfileAutomationUrl.equals("Profile cc0b9187-c4e5-4e1f-8b52-29804bca47c7 is not running or not automated"))
+        if (runningProfileAutomationUrl.equals("Profile " + profileId + " is not running or not automated"))
             runningProfileAutomationUrl = startProfile(profileId);
         $ = new RemoteWebDriver(new URI(runningProfileAutomationUrl).toURL(), new ChromeOptions());
         $.manage().window().maximize();

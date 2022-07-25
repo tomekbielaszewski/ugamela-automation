@@ -19,19 +19,18 @@ public class UgamelaSession {
         return this;
     }
 
+    public boolean isLoggedIn() {
+        return $.getCurrentUrl().startsWith("https://www.ugamela.pl/s1/");
+    }
+
     public UgamelaSession login(String login, String password) {
         if (!$.getCurrentUrl().equalsIgnoreCase(LOGIN_URL))
             openOgame();
         $.findElement(By.cssSelector("#login_input > table > tbody > tr > td > form > input:nth-child(1)")).sendKeys(login);
         $.findElement(By.cssSelector("#login_input > table > tbody > tr > td > form > input:nth-child(2)")).sendKeys(password);
         $.findElement(By.cssSelector("#login_input > table > tbody > tr > td > form > input[type=submit]:nth-child(3)")).click();
-        //TODO: assert if really logged in
-        loggedIn = true;
+        if(!isLoggedIn()) throw new IllegalStateException("Couldn't log in. Credentials valid?");
         return this;
-    }
-
-    public boolean isLoggedIn() {
-        return loggedIn;
     }
 
     public WebDriver getWebDriver() {
