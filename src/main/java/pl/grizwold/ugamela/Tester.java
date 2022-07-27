@@ -1,6 +1,7 @@
 package pl.grizwold.ugamela;
 
 import com.google.gson.Gson;
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -30,11 +31,16 @@ public class Tester {
 //        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36");
 //        $ = new ChromeDriver(options);
 
-        String profileId = "cc0b9187-c4e5-4e1f-8b52-29804bca47c7";
-        String runningProfileAutomationUrl = getRunningProfileAutomationUrl(profileId);
-        if (runningProfileAutomationUrl.equals("Profile " + profileId + " is not running or not automated"))
-            runningProfileAutomationUrl = startProfile(profileId);
-        $ = new RemoteWebDriver(new URI(runningProfileAutomationUrl).toURL(), new ChromeOptions());
+        String profileId = "5973191a-25d3-4047-b5d1-0803344b965f";
+//        String runningProfileAutomationUrl = getRunningProfileAutomationUrl(profileId);
+//        if (runningProfileAutomationUrl.equals("Profile " + profileId + " is not running or not automated"))
+//            runningProfileAutomationUrl = startProfile(profileId);
+//        String runningProfileAutomationUrl = startProfile(profileId);
+        String runningProfileAutomationUrl = "http://127.0.0.1:14190";
+        log.info("Connecting to: " + runningProfileAutomationUrl);
+        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--incognito");
+        $ = new RemoteWebDriver(new URI(runningProfileAutomationUrl).toURL(), options);
         $.manage().window().maximize();
 
         Credentials credentials = new Credentials();
@@ -78,6 +84,7 @@ public class Tester {
 //                .forEach(Tester::farmFromSpyReport);
     }
 
+    @SneakyThrows
     private static void farmFromSpyReport(SpyReports.SpyReport spyReport) {
         long capacity = 125000;
         long minimumShips = 200;
@@ -88,14 +95,23 @@ public class Tester {
         long shipsAmount = loot / capacity;
 
         do {
-            log.info(String.format("Sending %d of %s ships on attack mission", shipsAmount, shipName));
+            log.info(String.format("Sending %d of %s ships on attack mission to %s", shipsAmount, shipName, spyReport.address()));
 
-            Fleet1 fleet1 = spyReport.attack();
+            try {
+                Fleet1 fleet1 = spyReport.attack();
 
-            chooseGivenAmountOfShips((int) shipsAmount, shipName, fleet1)
-                    .next()
-                    .selectMission("Attack")
-                    .next();
+                chooseGivenAmountOfShips((int) shipsAmount, shipName, fleet1)
+                        .next()
+                        .selectMission("Attack")
+                        .next();
+            } catch (IllegalStateException e) {
+                if(e.getMessage().equalsIgnoreCase("Cannot send fleet - all slot taken")) {
+                    log.info("All slots taken. Waiting 1min for free slot and retrying...");
+                    Thread.sleep(1000 * 60);
+                    log.info("Retrying now!");
+                    continue;
+                }
+            }
 
             loot /= 2;
             shipsAmount = loot / capacity;
@@ -113,7 +129,9 @@ public class Tester {
             throw new IllegalStateException("There is not enough ships available \"" + shipName + "\" amount " + shipAmount);
         availableShip.ifPresent(availableFleet -> availableFleet.select(shipAmount));
 
-        return fleet.next();
+        if(fleet.canSendFleet())
+            return fleet.next();
+        throw new IllegalStateException("Cannot send fleet - all slot taken");
     }
 
     private static String getRunningProfileAutomationUrl(String profileId) throws IOException {
