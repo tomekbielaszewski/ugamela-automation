@@ -13,10 +13,7 @@ import pl.grizwold.ugamela.page.SpyReports;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -24,6 +21,26 @@ import java.util.Optional;
 public class Tester {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
+        WebDriver $ = connectToBrowser();
+
+        UgamelaSession session = login($);
+
+        farmFromSpyReports(session);
+
+//        Buildings buildings = new Buildings(session);
+//        boolean isUpgradable;
+//        do {
+//            int plantLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_SOLAR_PLANT);
+//            int metalLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_METAL_MINE);
+//            int crystalLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_CRYSTAL_MINE);
+//
+//            if (plantLevel >= metalLevel) isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_METAL_MINE);
+//            else if (plantLevel >= crystalLevel) isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_CRYSTAL_MINE);
+//            else isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_SOLAR_PLANT);
+//        } while (isUpgradable);
+    }
+
+    private static WebDriver connectToBrowser() throws MalformedURLException, URISyntaxException {
         WebDriver $;
 //        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 //        ChromeOptions options = new ChromeOptions();
@@ -42,25 +59,15 @@ public class Tester {
 //        options.addArguments("--incognito");
         $ = new RemoteWebDriver(new URI(runningProfileAutomationUrl).toURL(), options);
         $.manage().window().maximize();
+        return $;
+    }
 
+    private static UgamelaSession login(WebDriver $) {
         Credentials credentials = new Credentials();
         UgamelaSession session = new UgamelaSession($);
         if (!session.isLoggedIn())
             session.login(credentials.login, credentials.password);
-
-        farmFromSpyReports(session);
-
-//        Buildings buildings = new Buildings(session);
-//        boolean isUpgradable;
-//        do {
-//            int plantLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_SOLAR_PLANT);
-//            int metalLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_METAL_MINE);
-//            int crystalLevel = buildings.getTotalLevel(Buildings.Building.BUILDING_CRYSTAL_MINE);
-//
-//            if (plantLevel >= metalLevel) isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_METAL_MINE);
-//            else if (plantLevel >= crystalLevel) isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_CRYSTAL_MINE);
-//            else isUpgradable = buildings.upgrade(Buildings.Building.BUILDING_SOLAR_PLANT);
-//        } while (isUpgradable);
+        return session;
     }
 
     private static void farmFromSpyReports(UgamelaSession session) {
