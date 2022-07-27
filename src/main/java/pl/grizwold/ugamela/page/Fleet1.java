@@ -13,6 +13,7 @@ public class Fleet1 extends Page {
     private static final String FLEET_PAGE = "fleet.php";
 
     private static final String STATIONED_FLEET_TABLE_SELECTOR = "#gameContent > center > form > table > tbody:nth-child(1)";
+    private static final String NEXT_BUTTON_SELECTOR = "#gameContent > center > form > table > tbody:nth-child(4) > tr:nth-child(2) > th > input";
 
     public Fleet1(UgamelaSession session) {
         super(session);
@@ -29,10 +30,16 @@ public class Fleet1 extends Page {
                 .collect(Collectors.toList());
     }
 
+    public boolean canSendFleet() {
+        List<WebElement> nextButtonList = $().findElements(By.cssSelector(NEXT_BUTTON_SELECTOR));
+        return nextButtonList.size() > 0 &&
+                nextButtonList.get(0).isDisplayed();
+    }
+
     @SneakyThrows
     public Fleet2 next() {
         validateState();
-        WebElement button = $().findElement(By.cssSelector("#gameContent > center > form > table > tbody:nth-child(4) > tr:nth-child(2) > th > input"));
+        WebElement button = $().findElement(By.cssSelector(NEXT_BUTTON_SELECTOR));
         ((JavascriptExecutor) $()).executeScript("arguments[0].scrollIntoView(true);", button);
         Thread.sleep(500);
         button.click();
