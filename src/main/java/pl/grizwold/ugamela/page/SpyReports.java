@@ -117,8 +117,9 @@ public class SpyReports extends Page {
             return new Fleet1(SpyReports.this.session);
         }
 
-        public SpyReports openReports() {
-            return spyReports.open();
+        public SpyReports delete() {
+            return spyReports.open()
+                    .delete(this);
         }
 
         private long getResource(String resourceSelector) {
@@ -126,5 +127,12 @@ public class SpyReports extends Page {
             resource = resource.replaceAll("\\.", "");
             return Long.parseLong(resource);
         }
+    }
+
+    private SpyReports delete(SpyReport spyReport) {
+        spyReport.spyReport
+                .findElement(By.xpath("../preceding-sibling::tr[1]"))
+                .findElement(By.cssSelector(".delete")).click();
+        return this;
     }
 }
