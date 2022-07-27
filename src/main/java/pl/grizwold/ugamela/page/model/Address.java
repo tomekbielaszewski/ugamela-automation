@@ -29,4 +29,8 @@ public class Address {
         this.system = matcher.group("system");
         this.planet = matcher.group("planet");
     }
+
+    public String toString() {
+        return String.format("%s:%s:%s", galaxy, system, planet);
+    }
 }
