@@ -17,6 +17,8 @@ import java.net.*;
 import java.util.HashMap;
 import java.util.Optional;
 
+import static java.util.function.Predicate.not;
+
 @Log
 public class Tester {
 
@@ -26,6 +28,13 @@ public class Tester {
         UgamelaSession session = login($);
 
         farmFromSpyReports(session);
+
+//        long count = new SpyReports(session).open()
+//                .all()
+//                .stream()
+//                .filter(not(SpyReports.SpyReport::hasFleet))
+//                .count();
+//        System.out.println(count);
 
 //        Buildings buildings = new Buildings(session);
 //        boolean isUpgradable;
@@ -56,7 +65,6 @@ public class Tester {
         String runningProfileAutomationUrl = "http://127.0.0.1:14190";
         log.info("Connecting to: " + runningProfileAutomationUrl);
         ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--incognito");
         $ = new RemoteWebDriver(new URI(runningProfileAutomationUrl).toURL(), options);
         $.manage().window().maximize();
         return $;
@@ -76,6 +84,11 @@ public class Tester {
             Optional<SpyReports.SpyReport> latestReport = spyReports.latest();
             if (latestReport.isPresent()) {
                 SpyReports.SpyReport report = latestReport.get();
+                if(report.hasDefence() || report.hasFleet()) {
+                    log.info(String.format("Report %s has defense or fleet - deleting", report.address()));
+                    report.delete();
+                    continue;
+                }
                 farmFromSpyReport(report);
                 spyReports.open().deleteLatest();
             }
