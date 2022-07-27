@@ -19,8 +19,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Optional;
 
-import static java.util.function.Predicate.not;
-
 @Log
 public class Tester {
 
@@ -60,13 +58,24 @@ public class Tester {
     }
 
     private static void farmFromSpyReports(UgamelaSession session) {
-        new SpyReports(session).all()
-                .stream()
-                .filter(SpyReports.SpyReport::defenceRowVisible)
-                .filter(SpyReports.SpyReport::fleetRowVisible)
-                .filter(not(SpyReports.SpyReport::hasDefence))
-                .filter(not(SpyReports.SpyReport::hasFleet))
-                .forEach(Tester::farmFromSpyReport);
+        SpyReports spyReports = new SpyReports(session).open();
+        do {
+            Optional<SpyReports.SpyReport> latestReport = spyReports.latest();
+            if (latestReport.isPresent()) {
+                SpyReports.SpyReport report = latestReport.get();
+                farmFromSpyReport(report);
+                spyReports.open().deleteLatest();
+            }
+        } while (spyReports.latest().isPresent());
+//        new SpyReports(session)
+//                .open()
+//                .all()
+//                .stream()
+//                .filter(SpyReports.SpyReport::defenceRowVisible)
+//                .filter(SpyReports.SpyReport::fleetRowVisible)
+//                .filter(not(SpyReports.SpyReport::hasDefence))
+//                .filter(not(SpyReports.SpyReport::hasFleet))
+//                .forEach(Tester::farmFromSpyReport);
     }
 
     private static void farmFromSpyReport(SpyReports.SpyReport spyReport) {
@@ -91,9 +100,6 @@ public class Tester {
             loot /= 2;
             shipsAmount = loot / capacity;
         } while (shipsAmount >= minimumShips);
-
-        //TODO delete report
-
     }
 
     public static Fleet2 chooseGivenAmountOfShips(int shipAmount, String shipName, Fleet1 fleet) {
@@ -104,7 +110,7 @@ public class Tester {
                 .findFirst();
 
         if (availableShip.isEmpty())
-            throw new IllegalStateException("There is not enough ships available \"" + shipName + "\"");
+            throw new IllegalStateException("There is not enough ships available \"" + shipName + "\" amount " + shipAmount);
         availableShip.ifPresent(availableFleet -> availableFleet.select(shipAmount));
 
         return fleet.next();
