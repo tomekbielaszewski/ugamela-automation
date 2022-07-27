@@ -93,19 +93,23 @@ public class SpyReports extends Page {
         }
 
         public boolean fleetRowVisible() {
-            return true;
+            return spyReport.findElements(By.xpath("//td[contains(text(),'Flota')]")).size() > 0;
         }
 
         public boolean hasFleet() {
-            return false;
+            if(!fleetRowVisible()) return false;
+            return spyReport.findElements(By.xpath(".//td[contains(text(),'Flota')]/../../child::*"))
+                    .size() > 1;
         }
 
         public boolean defenceRowVisible() {
-            return true;
+            return spyReport.findElements(By.xpath("//td[contains(text(),'Obrona')]")).size() > 0;
         }
 
         public boolean hasDefence() {
-            return false;
+            if(!defenceRowVisible()) return false;
+            return spyReport.findElements(By.xpath(".//td[contains(text(),'Obrona')]/../../child::*"))
+                    .size() > 1;
         }
 
         public Fleet1 attack() {
