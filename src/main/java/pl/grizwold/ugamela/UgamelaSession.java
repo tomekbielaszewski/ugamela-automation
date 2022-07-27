@@ -8,8 +8,6 @@ public class UgamelaSession {
 
     private final WebDriver $;
 
-    private boolean loggedIn;
-
     public UgamelaSession(WebDriver webDriver) {
         this.$ = webDriver;
     }

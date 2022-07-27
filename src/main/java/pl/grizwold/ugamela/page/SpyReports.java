@@ -16,16 +16,20 @@ public class SpyReports extends Page {
 
     public SpyReports(UgamelaSession session) {
         super(session);
+    }
+
+    public SpyReports open() {
         if (!isUrlEndingWith(SPY_REPORTS_PAGE)) {
             open(SPY_REPORTS_PAGE);
         }
+        return this;
     }
 
     public List<SpyReport> all() {
         validateState();
         List<WebElement> spyReports = $().findElements(By.cssSelector(MESSAGES_SELECTOR));
         return spyReports.stream()
-                .map(SpyReport::new)
+                .map(s -> new SpyReport(s, this))
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +46,7 @@ public class SpyReports extends Page {
         String currentUrl = $().getCurrentUrl();
         if (currentUrl.endsWith(SPY_REPORTS_PAGE))
             return;
-        throw new IllegalStateException("Not on spy reports page!\nCurrent page: " + currentUrl + "\nExpected page: " + SPY_REPORTS_PAGE);
+        open();
     }
 
     public class SpyReport {
@@ -54,6 +58,7 @@ public class SpyReports extends Page {
         private static final String DEFENCE_SELECTOR = "";
         private static final String ATTACK_LINK_SELECTOR = "table:nth-child(9) > tbody > tr > td > a";
 
+        private final SpyReports spyReports;
         private final WebElement spyReport;
         private final Address address;
         private final String attackLink;
@@ -61,7 +66,8 @@ public class SpyReports extends Page {
         private final long cristal;
         private final long deuterium;
 
-        public SpyReport(WebElement spyReport) {
+        public SpyReport(WebElement spyReport, SpyReports spyReports) {
+            this.spyReports = spyReports;
             this.spyReport = spyReport;
             this.address = new Address(spyReport.findElement(By.cssSelector(ADDRESS_SELECTOR)).getText());
             this.attackLink = this.spyReport.findElement(By.linkText("Napadaj")).getAttribute("href");
@@ -105,6 +111,10 @@ public class SpyReports extends Page {
         public Fleet1 attack() {
             $().get(this.attackLink);
             return new Fleet1(SpyReports.this.session);
+        }
+
+        public SpyReports openReports() {
+            return spyReports.open();
         }
 
         private long getResource(String resourceSelector) {
