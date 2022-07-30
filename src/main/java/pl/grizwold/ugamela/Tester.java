@@ -8,7 +8,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import pl.grizwold.ugamela.page.Fleet1;
 import pl.grizwold.ugamela.page.Fleet2;
+import pl.grizwold.ugamela.page.Galaxy;
 import pl.grizwold.ugamela.page.SpyReports;
+import pl.grizwold.ugamela.page.model.Address;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,8 +29,15 @@ public class Tester {
 
         UgamelaSession session = login($);
 
-        farmFromSpyReports(session);
+//        farmFromSpyReports(session);
 //        chooseGivenAmountOfShips(100000, "Mega transporter", new Fleet1(session));
+        new Galaxy(session)
+                .open()
+                .goTo(new Address("[3:123:1]"))
+                .nextSystem()
+                .nextSystem()
+                .nextSystem()
+                .nextSystem();
 
 //        long count = new SpyReports(session).open()
 //                .all()
