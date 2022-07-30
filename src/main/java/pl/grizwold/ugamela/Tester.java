@@ -27,8 +27,8 @@ public class Tester {
 
         UgamelaSession session = login($);
 
-//        farmFromSpyReports(session);
-        chooseGivenAmountOfShips(100000, "Mega transporter", new Fleet1(session));
+        farmFromSpyReports(session);
+//        chooseGivenAmountOfShips(100000, "Mega transporter", new Fleet1(session));
 
 //        long count = new SpyReports(session).open()
 //                .all()
@@ -122,7 +122,7 @@ public class Tester {
 
         long waitingTime = 0;
 
-        do {
+        while (shipsAmount >= minimumShips) {
             log.info(String.format("Sending %d of %s ships on attack mission to %s", shipsAmount, shipName, spyReport.address()));
 
             try {
@@ -137,7 +137,6 @@ public class Tester {
                 if(e.getMessage().equalsIgnoreCase("Cannot send fleet - all slot taken")) {
                     log.info("All slots taken. Waiting 1min for free slot and retrying...");
                     Thread.sleep(1000 * 60);
-                    log.info("Retrying now!");
                     waitingTime++;
                     continue;
                 }
@@ -152,7 +151,7 @@ public class Tester {
             waitingTime = 0;
             loot /= 2;
             shipsAmount = loot / capacity;
-        } while (shipsAmount >= minimumShips);
+        }
     }
 
     public static Fleet2 chooseGivenAmountOfShips(int shipAmount, String shipName, Fleet1 fleet) {
