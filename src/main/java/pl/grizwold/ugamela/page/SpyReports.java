@@ -10,7 +10,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SpyReports extends Page {
+    private static final String MESSAGES_PAGE = "messages.php";
     private static final String SPY_REPORTS_PAGE = "messages.php?mode=show&messcat=0";
+    private static final String SPY_REPORTS_PAGE_CATEGORY = "messcat=0";
     private static final String MESSAGES_SELECTOR = "#msgCont > tbody > tr > td.msgrow.tleft";
     private static final String DELETE_MESSAGE_SELECTOR = "#msgCont > tbody > tr > td > span.fRigh > span:nth-child(3) > a.delete";
 
@@ -19,7 +21,7 @@ public class SpyReports extends Page {
     }
 
     public SpyReports open() {
-        if (!isUrlEndingWith(SPY_REPORTS_PAGE)) {
+        if (!isUrlLike(SPY_REPORTS_PAGE)) {
             open(SPY_REPORTS_PAGE);
         }
         return this;
@@ -43,8 +45,7 @@ public class SpyReports extends Page {
     }
 
     private void validateState() {
-        String currentUrl = $().getCurrentUrl();
-        if (currentUrl.endsWith(SPY_REPORTS_PAGE))
+        if (isUrlLike(MESSAGES_PAGE) && isUrlLike(SPY_REPORTS_PAGE_CATEGORY))
             return;
         open();
     }
