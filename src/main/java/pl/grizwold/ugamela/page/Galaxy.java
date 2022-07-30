@@ -15,7 +15,7 @@ public class Galaxy extends Page {
     }
 
     public Galaxy open() {
-        if(!isUrlLike(GALAXY_PAGE))
+        if (!isUrlLike(GALAXY_PAGE))
             open(GALAXY_PAGE);
         return this;
     }
@@ -52,23 +52,48 @@ public class Galaxy extends Page {
     }
 
     public Galaxy goTo(Address address) {
-        WebElement galaxyForm = getGalaxyForm();
-        WebElement galaxyFormElement = galaxyForm.findElement(By.xpath("//input[@name=\"galaxy\"]"));
-        WebElement systemFormElement = galaxyForm.findElement(By.xpath("//input[@name=\"system\"]"));
-        WebElement submit = galaxyForm.findElement(By.xpath("//input[@type=\"submit\"]"));
+        if (!isUrlEndingWith(urlSuffix(address))) {
+            WebElement galaxyForm = getGalaxyForm();
+            WebElement galaxyFormElement = galaxyForm.findElement(By.xpath("//input[@name=\"galaxy\"]"));
+            WebElement systemFormElement = galaxyForm.findElement(By.xpath("//input[@name=\"system\"]"));
+            WebElement submit = galaxyForm.findElement(By.xpath("//input[@type=\"submit\"]"));
 
-        galaxyFormElement.sendKeys(Keys.CONTROL, "a");
-        galaxyFormElement.sendKeys(address.getGalaxy());
+            galaxyFormElement.sendKeys(Keys.CONTROL, "a");
+            galaxyFormElement.sendKeys(address.getGalaxy());
 
-        systemFormElement.sendKeys(Keys.CONTROL, "a");
-        systemFormElement.sendKeys(address.getSystem());
+            systemFormElement.sendKeys(Keys.CONTROL, "a");
+            systemFormElement.sendKeys(address.getSystem());
 
-        submit.click();
+            submit.click();
+        }
 
         return this;
     }
 
+    private String urlSuffix(Address address) {
+        return String.format("#%s:%s", address.getGalaxy(), address.getSystem());
+    }
+
     private WebElement getGalaxyForm() {
         return $().findElement(By.id("galaxy_form"));
+    }
+
+    public Planet getPlanet(int position) {
+        open();
+        WebElement planet = $().findElement(By.xpath("//*[@id=\"galRows\"]/tr[" + position + "]"));
+        return new Planet(planet);
+    }
+
+    public Planet getPlanet(Address address) {
+        open().goTo(address);
+        return getPlanet(Integer.parseInt(address.getPlanet()));
+    }
+
+    public class Planet {
+        private final WebElement planet;
+
+        public Planet(WebElement planet) {
+            this.planet = planet;
+        }
     }
 }

@@ -33,11 +33,7 @@ public class Tester {
 //        chooseGivenAmountOfShips(100000, "Mega transporter", new Fleet1(session));
         new Galaxy(session)
                 .open()
-                .goTo(new Address("[3:123:1]"))
-                .nextSystem()
-                .nextSystem()
-                .nextSystem()
-                .nextSystem();
+                .goTo(new Address("[3:123:1]"));
 
 //        long count = new SpyReports(session).open()
 //                .all()
