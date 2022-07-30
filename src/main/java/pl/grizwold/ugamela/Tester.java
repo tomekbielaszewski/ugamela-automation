@@ -27,7 +27,8 @@ public class Tester {
 
         UgamelaSession session = login($);
 
-        farmFromSpyReports(session);
+//        farmFromSpyReports(session);
+        chooseGivenAmountOfShips(100000, "Mega transporter", new Fleet1(session));
 
 //        long count = new SpyReports(session).open()
 //                .all()
@@ -49,7 +50,7 @@ public class Tester {
 //        } while (isUpgradable);
     }
 
-    private static WebDriver connectToBrowser() throws MalformedURLException, URISyntaxException {
+    private static WebDriver connectToBrowser() throws IOException, URISyntaxException {
         WebDriver $;
 //        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 //        ChromeOptions options = new ChromeOptions();
@@ -61,8 +62,8 @@ public class Tester {
 //        String runningProfileAutomationUrl = getRunningProfileAutomationUrl(profileId);
 //        if (runningProfileAutomationUrl.equals("Profile " + profileId + " is not running or not automated"))
 //            runningProfileAutomationUrl = startProfile(profileId);
+        String runningProfileAutomationUrl = "http://127.0.0.1:40938";
 //        String runningProfileAutomationUrl = startProfile(profileId);
-        String runningProfileAutomationUrl = "http://127.0.0.1:14190";
         log.info("Connecting to: " + runningProfileAutomationUrl);
         ChromeOptions options = new ChromeOptions();
         $ = new RemoteWebDriver(new URI(runningProfileAutomationUrl).toURL(), options);
@@ -114,6 +115,13 @@ public class Tester {
         long loot = resourcesSum / 2;
         long shipsAmount = loot / capacity;
 
+        if(shipsAmount == 0) {
+            log.info("Ships amount to be sent is 0. Skipping this report.");
+            return;
+        }
+
+        long waitingTime = 0;
+
         do {
             log.info(String.format("Sending %d of %s ships on attack mission to %s", shipsAmount, shipName, spyReport.address()));
 
@@ -125,14 +133,23 @@ public class Tester {
                         .selectMission("Attack")
                         .next();
             } catch (IllegalStateException e) {
+                if(waitingTime > 30) throw new IllegalStateException("Waited to long. Ships destroyed? Long missions?", e);
                 if(e.getMessage().equalsIgnoreCase("Cannot send fleet - all slot taken")) {
                     log.info("All slots taken. Waiting 1min for free slot and retrying...");
                     Thread.sleep(1000 * 60);
                     log.info("Retrying now!");
+                    waitingTime++;
+                    continue;
+                }
+                if(e.getMessage().equalsIgnoreCase("There is not enough ships available \"" + shipName + "\" amount " + shipsAmount)) {
+                    log.info("Not enough ships. Waiting 1min for fleet return...");
+                    Thread.sleep(1000 * 60);
+                    waitingTime++;
                     continue;
                 }
             }
 
+            waitingTime = 0;
             loot /= 2;
             shipsAmount = loot / capacity;
         } while (shipsAmount >= minimumShips);

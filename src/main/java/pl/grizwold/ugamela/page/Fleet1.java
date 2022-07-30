@@ -17,7 +17,7 @@ public class Fleet1 extends Page {
 
     public Fleet1(UgamelaSession session) {
         super(session);
-        if(!isUrlLike(FLEET_PAGE)) {
+        if (!isUrlLike(FLEET_PAGE)) {
             open(FLEET_PAGE);
         }
     }
@@ -48,7 +48,7 @@ public class Fleet1 extends Page {
 
     private void validateState() {
         String currentUrl = $().getCurrentUrl();
-        if(currentUrl.contains(FLEET_PAGE))
+        if (currentUrl.contains(FLEET_PAGE))
             return;
         throw new IllegalStateException("Not on fleet page.\nCurrent page: " + currentUrl + "\nExpected page: " + FLEET_PAGE);
     }
