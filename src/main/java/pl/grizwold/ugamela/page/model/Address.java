@@ -11,11 +11,11 @@ import java.util.regex.Pattern;
 @Builder
 @AllArgsConstructor
 public class Address {
-    private static final String ADDRESS_PATTERN = "\\[(?<galaxy>[\\d]+):(?<system>[\\d]+):(?<planet>[\\d]+)]";
+    private static final String ADDRESS_PATTERN = "\\[(?<galaxy>[\\d]+):(?<system>[\\d]+):(?<planet>[\\d]+)]"; // [1:123:3]
 
-    private String planet;
-    private String system;
     private String galaxy;
+    private String system;
+    private String planet;
 
     public Address(String address) {
         Pattern pattern = Pattern.compile(ADDRESS_PATTERN);
@@ -31,6 +31,6 @@ public class Address {
     }
 
     public String toString() {
-        return String.format("%s:%s:%s", galaxy, system, planet);
+        return String.format("[%s:%s:%s]", galaxy, system, planet);
     }
 }
