@@ -107,6 +107,13 @@ public class SpyReports extends Page {
                     .size() > 1;
         }
 
+        public Map<String, Integer> getDefence() {
+            Stream<String> names = spyReport.findElements(By.xpath(".//td[contains(.,'Obrona')]/../../child::*/td[@class='stl']")).stream().map(WebElement::getText);
+            Stream<Integer> amounts = spyReport.findElements(By.xpath(".//td[contains(.,'Obrona')]/../../child::*/td[@class='stv']")).stream().map(WebElement::getText).map(n->n.replaceAll("\\.", "")).map(Integer::parseInt);
+            return Streams.zip(names, amounts, Maps::immutableEntry)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        }
+
         public boolean defenceRowVisible() {
             return spyReport.findElements(By.xpath(".//td[contains(text(),'Obrona')]")).size() > 0;
         }
