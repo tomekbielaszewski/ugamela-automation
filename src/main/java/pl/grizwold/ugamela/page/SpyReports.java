@@ -1,13 +1,17 @@
 package pl.grizwold.ugamela.page;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Streams;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import pl.grizwold.ugamela.UgamelaSession;
 import pl.grizwold.ugamela.page.model.Address;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SpyReports extends Page {
     private static final String MESSAGES_PAGE = "messages.php";
@@ -94,7 +98,7 @@ public class SpyReports extends Page {
         }
 
         public boolean fleetRowVisible() {
-            return spyReport.findElements(By.xpath("//td[contains(text(),'Flota')]")).size() > 0;
+            return spyReport.findElements(By.xpath(".//td[contains(text(),'Flota')]")).size() > 0;
         }
 
         public boolean hasFleet() {
@@ -104,7 +108,7 @@ public class SpyReports extends Page {
         }
 
         public boolean defenceRowVisible() {
-            return spyReport.findElements(By.xpath("//td[contains(text(),'Obrona')]")).size() > 0;
+            return spyReport.findElements(By.xpath(".//td[contains(text(),'Obrona')]")).size() > 0;
         }
 
         public boolean hasDefence() {
