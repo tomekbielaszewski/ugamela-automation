@@ -45,10 +45,12 @@ public class Tester {
 
         while (true) {
             Address startAddress = new Address("[1:38:1]");
+
+            farmFromSpyReports(session);
+
             Galaxy.GALAXY_WAIT_TIMEOUT = 5;
             Galaxy galaxy = new Galaxy(session).goTo(startAddress);
-            scanGalaxy(10, 30, 10000, galaxy);
-            farmFromSpyReports(session);
+            scanGalaxy(10, 30, 60000, galaxy);
         }
 
 //        long count = new SpyReports(session).open()
@@ -87,14 +89,15 @@ public class Tester {
                 failedSpyAttempts = planetsToScan
                         .filter(Galaxy.Planet::isEnemy)
                         .filter(Galaxy.Planet::isLongInactive)
-                        .peek(p -> log.info(p.name + " " + p.address))
+                        .peek(p -> log.info("Scanning " + p.name + " at " + p.address))
                         .map(Galaxy.Planet::spy)
                         .filter(not(MissionInfo::isSuccess))
-                        .peek(p -> log.info(p.getMessage()))
+                        .peek(p -> log.info("Unsuccessful scan: " + p.getMessage()))
                         .map(MissionInfo::getPlanet)
                         .toList();
                 if (!failedSpyAttempts.isEmpty()) {
                     retries++;
+                    log.info("There were " + failedSpyAttempts.size() + " failed scans. Waiting " + (retryWaitMillis / 1000) + "sec");
                     Thread.sleep(retryWaitMillis);
                     continue;
                 }
@@ -116,7 +119,7 @@ public class Tester {
 //        String runningProfileAutomationUrl = getRunningProfileAutomationUrl(profileId);
 //        if (runningProfileAutomationUrl.equals("Profile " + profileId + " is not running or not automated"))
 //            runningProfileAutomationUrl = startProfile(profileId);
-        String runningProfileAutomationUrl = "http://127.0.0.1:39448";
+        String runningProfileAutomationUrl = "http://127.0.0.1:51819";
 //        String runningProfileAutomationUrl = startProfile(profileId);
         log.info("Connecting to: " + runningProfileAutomationUrl);
         ChromeOptions options = new ChromeOptions();
