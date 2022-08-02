@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pl.grizwold.ugamela.SeleniumHelper;
 import pl.grizwold.ugamela.UgamelaSession;
@@ -64,6 +65,12 @@ public class Galaxy extends Page {
 
     public Address address() {
         return this.navigator.getAddress();
+    }
+
+    public Galaxy looseFocus() {
+        WebElement ajaxInfoBox = $().findElement(By.id("ajaxInfoBox"));
+        new Actions($()).moveToElement(ajaxInfoBox).perform();
+        return this;
     }
 
     @SneakyThrows
