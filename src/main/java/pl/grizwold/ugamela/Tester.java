@@ -44,13 +44,13 @@ public class Tester {
 //        System.out.println(spyReport.hasFleet());
 
         while (true) {
-            Address startAddress = new Address("[1:38:1]");
+            Address startAddress = new Address("[1:48:1]");
 
             farmFromSpyReports(session);
 
             Galaxy.GALAXY_WAIT_TIMEOUT = 5;
             Galaxy galaxy = new Galaxy(session).goTo(startAddress);
-            scanGalaxy(10, 30, 60000, galaxy);
+            scanGalaxy(10, 30, galaxy);
         }
 
 //        long count = new SpyReports(session).open()
@@ -73,7 +73,7 @@ public class Tester {
 //        } while (isUpgradable);
     }
 
-    private static Address scanGalaxy(int systemsToScan, int maxScanRetries, int retryWaitMillis, Galaxy galaxy)
+    private static Address scanGalaxy(int systemsToScan, int maxScanRetries, Galaxy galaxy)
             throws InterruptedException {
         List<Galaxy.Planet> failedSpyAttempts = Collections.emptyList();
 
@@ -95,10 +95,12 @@ public class Tester {
                         .peek(p -> log.info("Unsuccessful scan: " + p.getMessage()))
                         .map(MissionInfo::getPlanet)
                         .toList();
+                galaxy.looseFocus();
                 if (!failedSpyAttempts.isEmpty()) {
                     retries++;
-                    log.info("There were " + failedSpyAttempts.size() + " failed scans. Waiting " + (retryWaitMillis / 1000) + "sec");
-                    Thread.sleep(retryWaitMillis);
+                    long retryWaitSec = (long) Math.pow(retries, 2);
+                    log.info("There were " + failedSpyAttempts.size() + " failed scans. Waiting " + retryWaitSec + "sec");
+                    Thread.sleep(retryWaitSec * 1000);
                     continue;
                 }
                 galaxy.navigator.nextSystem();
