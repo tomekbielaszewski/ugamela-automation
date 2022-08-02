@@ -13,6 +13,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.function.Predicate.not;
+
 public class SpyReports extends Page {
     private static final String MESSAGES_PAGE = "messages.php";
     private static final String SPY_REPORTS_PAGE = "messages.php?mode=show&messcat=0";
@@ -118,10 +120,17 @@ public class SpyReports extends Page {
             return spyReport.findElements(By.xpath(".//td[contains(text(),'Obrona')]")).size() > 0;
         }
 
+        public boolean defenceRowEmpty() {
+            return spyReport.findElements(By.xpath(".//td[contains(text(),'Obrona')]/../../child::*"))
+                    .size() == 1;
+        }
+
         public boolean hasDefence() {
             if(!defenceRowVisible()) return false;
-            return spyReport.findElements(By.xpath(".//td[contains(text(),'Obrona')]/../../child::*"))
-                    .size() > 1;
+            if(defenceRowEmpty()) return false;
+            return getDefence().keySet().stream()
+                    .filter(not("Rakieta międzyplanetarna"::equals))
+                    .count() > 0;
         }
 
         public Fleet1 attack() {

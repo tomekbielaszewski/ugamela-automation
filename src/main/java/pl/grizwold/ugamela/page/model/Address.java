@@ -7,15 +7,13 @@ import lombok.Data;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Data
-@Builder
 @AllArgsConstructor
 public class Address {
     private static final String ADDRESS_PATTERN = "\\[(?<galaxy>[\\d]+):(?<system>[\\d]+):(?<planet>[\\d]+)]"; // [1:123:3]
 
-    private String galaxy;
-    private String system;
-    private String planet;
+    public final String galaxy;
+    public final String system;
+    public final String planet;
 
     public Address(String address) {
         Pattern pattern = Pattern.compile(ADDRESS_PATTERN);

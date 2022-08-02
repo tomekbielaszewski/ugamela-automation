@@ -6,34 +6,50 @@ import lombok.extern.java.Log;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import pl.grizwold.ugamela.page.Fleet1;
-import pl.grizwold.ugamela.page.Fleet2;
-import pl.grizwold.ugamela.page.Galaxy;
-import pl.grizwold.ugamela.page.SpyReports;
+import pl.grizwold.ugamela.page.*;
 import pl.grizwold.ugamela.page.model.Address;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.function.Predicate.not;
 
 @Log
 public class Tester {
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         WebDriver $ = connectToBrowser();
 
         UgamelaSession session = login($);
 
 //        farmFromSpyReports(session);
 //        chooseGivenAmountOfShips(100000, "Mega transporter", new Fleet1(session));
-        new Galaxy(session)
-                .open()
-                .goTo(new Address("[3:123:1]"));
+
+//        SpyReports.SpyReport spyReport = new SpyReports(session)
+//                .latest()
+//                .get();
+//        System.out.println(spyReport.defenceRowVisible());
+//        System.out.println(spyReport.hasDefence());
+//        System.out.println(spyReport.fleetRowVisible());
+//        System.out.println(spyReport.hasFleet());
+
+        while (true) {
+            Address startAddress = new Address("[1:38:1]");
+            Galaxy.GALAXY_WAIT_TIMEOUT = 5;
+            Galaxy galaxy = new Galaxy(session).goTo(startAddress);
+            scanGalaxy(10, 30, 10000, galaxy);
+            farmFromSpyReports(session);
+        }
 
 //        long count = new SpyReports(session).open()
 //                .all()
@@ -55,6 +71,39 @@ public class Tester {
 //        } while (isUpgradable);
     }
 
+    private static Address scanGalaxy(int systemsToScan, int maxScanRetries, int retryWaitMillis, Galaxy galaxy)
+            throws InterruptedException {
+        List<Galaxy.Planet> failedSpyAttempts = Collections.emptyList();
+
+        for (int i = 0; i < systemsToScan; i++) {
+            int retries = 0;
+            do {
+                if (retries > maxScanRetries) break;
+
+                Stream<Galaxy.Planet> planetsToScan = failedSpyAttempts.isEmpty() ?
+                        galaxy.getInhabitedPlanets() :
+                        failedSpyAttempts.stream();
+
+                failedSpyAttempts = planetsToScan
+                        .filter(Galaxy.Planet::isEnemy)
+                        .filter(Galaxy.Planet::isLongInactive)
+                        .peek(p -> log.info(p.name + " " + p.address))
+                        .map(Galaxy.Planet::spy)
+                        .filter(not(MissionInfo::isSuccess))
+                        .peek(p -> log.info(p.getMessage()))
+                        .map(MissionInfo::getPlanet)
+                        .toList();
+                if (!failedSpyAttempts.isEmpty()) {
+                    retries++;
+                    Thread.sleep(retryWaitMillis);
+                    continue;
+                }
+                galaxy.navigator.nextSystem();
+            } while (!failedSpyAttempts.isEmpty());
+        }
+        return galaxy.address();
+    }
+
     private static WebDriver connectToBrowser() throws IOException, URISyntaxException {
         WebDriver $;
 //        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
@@ -67,7 +116,7 @@ public class Tester {
 //        String runningProfileAutomationUrl = getRunningProfileAutomationUrl(profileId);
 //        if (runningProfileAutomationUrl.equals("Profile " + profileId + " is not running or not automated"))
 //            runningProfileAutomationUrl = startProfile(profileId);
-        String runningProfileAutomationUrl = "http://127.0.0.1:40938";
+        String runningProfileAutomationUrl = "http://127.0.0.1:39448";
 //        String runningProfileAutomationUrl = startProfile(profileId);
         log.info("Connecting to: " + runningProfileAutomationUrl);
         ChromeOptions options = new ChromeOptions();
@@ -90,7 +139,7 @@ public class Tester {
             Optional<SpyReports.SpyReport> latestReport = spyReports.latest();
             if (latestReport.isPresent()) {
                 SpyReports.SpyReport report = latestReport.get();
-                if(report.hasDefence() || report.hasFleet()) {
+                if (report.hasDefence() || report.hasFleet()) {
                     log.info(String.format("Report %s has defense or fleet - deleting", report.address()));
                     report.delete();
                     continue;
@@ -99,15 +148,6 @@ public class Tester {
                 spyReports.open().deleteLatest();
             }
         } while (spyReports.latest().isPresent());
-//        new SpyReports(session)
-//                .open()
-//                .all()
-//                .stream()
-//                .filter(SpyReports.SpyReport::defenceRowVisible)
-//                .filter(SpyReports.SpyReport::fleetRowVisible)
-//                .filter(not(SpyReports.SpyReport::hasDefence))
-//                .filter(not(SpyReports.SpyReport::hasFleet))
-//                .forEach(Tester::farmFromSpyReport);
     }
 
     @SneakyThrows
@@ -120,7 +160,7 @@ public class Tester {
         long loot = resourcesSum / 2;
         long shipsAmount = loot / capacity;
 
-        if(shipsAmount == 0) {
+        if (shipsAmount == 0) {
             log.info("Ships amount to be sent is 0. Skipping this report.");
             return;
         }
@@ -138,14 +178,15 @@ public class Tester {
                         .selectMission("Attack")
                         .next();
             } catch (IllegalStateException e) {
-                if(waitingTime > 30) throw new IllegalStateException("Waited to long. Ships destroyed? Long missions?", e);
-                if(e.getMessage().equalsIgnoreCase("Cannot send fleet - all slot taken")) {
+                if (waitingTime > 30)
+                    throw new IllegalStateException("Waited to long. Ships destroyed? Long missions?", e);
+                if (e.getMessage().equalsIgnoreCase("Cannot send fleet - all slot taken")) {
                     log.info("All slots taken. Waiting 1min for free slot and retrying...");
                     Thread.sleep(1000 * 60);
                     waitingTime++;
                     continue;
                 }
-                if(e.getMessage().equalsIgnoreCase("There is not enough ships available \"" + shipName + "\" amount " + shipsAmount)) {
+                if (e.getMessage().equalsIgnoreCase("There is not enough ships available \"" + shipName + "\" amount " + shipsAmount)) {
                     log.info("Not enough ships. Waiting 1min for fleet return...");
                     Thread.sleep(1000 * 60);
                     waitingTime++;
@@ -157,6 +198,7 @@ public class Tester {
             loot /= 2;
             shipsAmount = loot / capacity;
         }
+        log.info(String.format("Finished farming %s there is %s loot left which would require %s ships only.", spyReport.address(), loot, shipsAmount));
     }
 
     public static Fleet2 chooseGivenAmountOfShips(int shipAmount, String shipName, Fleet1 fleet) {
@@ -170,7 +212,7 @@ public class Tester {
             throw new IllegalStateException("There is not enough ships available \"" + shipName + "\" amount " + shipAmount);
         availableShip.ifPresent(availableFleet -> availableFleet.select(shipAmount));
 
-        if(fleet.canSendFleet())
+        if (fleet.canSendFleet())
             return fleet.next();
         throw new IllegalStateException("Cannot send fleet - all slot taken");
     }

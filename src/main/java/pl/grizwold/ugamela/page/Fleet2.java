@@ -57,9 +57,9 @@ public class Fleet2 extends Page {
 
     public Fleet2 selectDestination(Address address) {
         validateState();
-        $().findElement(By.cssSelector(ADDRESS_GALAXY_SELECTOR)).sendKeys(address.getGalaxy());
-        $().findElement(By.cssSelector(ADDRESS_SYSTEM_SELECTOR)).sendKeys(address.getSystem());
-        $().findElement(By.cssSelector(ADDRESS_PLANET_SELECTOR)).sendKeys(address.getPlanet());
+        $().findElement(By.cssSelector(ADDRESS_GALAXY_SELECTOR)).sendKeys(address.galaxy);
+        $().findElement(By.cssSelector(ADDRESS_SYSTEM_SELECTOR)).sendKeys(address.system);
+        $().findElement(By.cssSelector(ADDRESS_PLANET_SELECTOR)).sendKeys(address.planet);
         return this;
     }
 
