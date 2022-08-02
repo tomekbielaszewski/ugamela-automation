@@ -203,7 +203,7 @@ public class Tester {
             loot /= 2;
             shipsAmount = loot / capacity;
         }
-        log.info(String.format("Finished farming %s there is %s loot left which would require %s ships only.", spyReport.address(), loot, shipsAmount));
+        log.info(String.format("Finished farming %s there is %skk loot left which would require %s ships only.", spyReport.address(), loot/1000000, shipsAmount));
     }
 
     public static Fleet2 chooseGivenAmountOfShips(int shipAmount, String shipName, Fleet1 fleet) {

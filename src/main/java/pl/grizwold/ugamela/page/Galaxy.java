@@ -68,7 +68,7 @@ public class Galaxy extends Page {
     }
 
     public Galaxy looseFocus() {
-        WebElement ajaxInfoBox = $().findElement(By.id("ajaxInfoBox"));
+        WebElement ajaxInfoBox = $().findElement(By.id("galaxy_form"));
         new Actions($()).moveToElement(ajaxInfoBox).perform();
         return this;
     }
