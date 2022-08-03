@@ -43,14 +43,14 @@ public class Tester {
 //        System.out.println(spyReport.fleetRowVisible());
 //        System.out.println(spyReport.hasFleet());
 
+        Address startAddress = new Address("[1:60:1]");
+
         while (true) {
-            Address startAddress = new Address("[1:48:1]");
-
             farmFromSpyReports(session);
-
             Galaxy.GALAXY_WAIT_TIMEOUT = 5;
             Galaxy galaxy = new Galaxy(session).goTo(startAddress);
-            scanGalaxy(10, 30, galaxy);
+            startAddress = scanGalaxy(10, 30, galaxy);
+            log.info("Restarting the cycle from " + startAddress);
         }
 
 //        long count = new SpyReports(session).open()
