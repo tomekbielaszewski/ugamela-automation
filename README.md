@@ -12,7 +12,7 @@ In order to start using this project you need to either create a credentials fil
 }
 ```
 
-end then login by simply:
+and then login:
 
 ```java
 UgamelaSession session = new UgamelaSession(webDriver).login();
@@ -24,7 +24,7 @@ or pass the credentials by yourself:
 UgamelaSession session = new UgamelaSession(webDriver).login(login, pass);
 ```
   
-And finally you can start interacting with the game
+then finally you can start interacting with the game
 
 ```java
 SpyReports.SpyReport spyReport = new SpyReports(session)
@@ -34,7 +34,7 @@ System.out.println(spyReport.hasDefence());
 System.out.println(spyReport.hasFleet());
 ```
 
-or when you are lazy - use preexisting routines
+or, if you are lazy, use preexisting routines
 
 ```java
 Farming farming = new Farming();
