@@ -2,33 +2,42 @@
 Ugamela automation project based on Selenium WebDriver.
 
 # Getting started
-1. Create the `pass.json` file:
+
+In order to start using this project you need to either create a credentials file like so:
+
 ```json
 {
   "login": "your_ugamela_login",
   "password": "your_ugamela_password"
 }
 ```
-2. Read the credentials by creating new Credentials object:
+
+end then login by simply:
+
 ```java
-Credentials credentials = new Credentials();
+UgamelaSession session = new UgamelaSession(webDriver).login();
 ```
-3. Login to the game by creating new UgamelaSession object using your WebDriver instance:
+
+or pass the credentials by yourself:
+
 ```java
-public UgamelaSession login(WebDriver $) {
-    Credentials credentials = new Credentials();
-    UgamelaSession session = new UgamelaSession($);
-    if (!session.isLoggedIn())
-        session.login(credentials.login, credentials.password);
-    return session;
-}
+UgamelaSession session = new UgamelaSession(webDriver).login(login, pass);
 ```
-I won't cover the WebDriver part here. There is plenty of Selenium WebDriver docs out there.  
-4. Interact with the game:
+  
+And finally you can start interacting with the game
+
 ```java
 SpyReports.SpyReport spyReport = new SpyReports(session)
         .latest()
         .get();
 System.out.println(spyReport.hasDefence());
 System.out.println(spyReport.hasFleet());
+```
+
+or when you are lazy - use preexisting routines
+
+```java
+Farming farming = new Farming();
+farming.scanGalaxy(10, 30, galaxy);
+farming.farmFromSpyReports(session);
 ```
