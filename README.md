@@ -23,7 +23,7 @@ public UgamelaSession login(WebDriver $) {
     return session;
 }
 ```
-I won't cover the WebDriver part here. There is plenty of Selenium WebDriver docs out there.
+I won't cover the WebDriver part here. There is plenty of Selenium WebDriver docs out there.  
 4. Interact with the game:
 ```java
 SpyReports.SpyReport spyReport = new SpyReports(session)
