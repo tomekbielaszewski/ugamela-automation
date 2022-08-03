@@ -1,23 +1,15 @@
 package pl.grizwold.ugamela;
 
-import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import pl.grizwold.ugamela.page.*;
 import pl.grizwold.ugamela.page.model.Address;
+import pl.grizwold.webdriver.MultiloginWebDriver;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -109,23 +101,13 @@ public class Tester {
         return galaxy.address();
     }
 
-    private static WebDriver connectToBrowser() throws IOException, URISyntaxException {
+    private static WebDriver connectToBrowser() {
         WebDriver $;
-//        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
-//        ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--remote-debugging-port=32003");
-//        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36");
-//        $ = new ChromeDriver(options);
 
         String profileId = "5973191a-25d3-4047-b5d1-0803344b965f";
-//        String runningProfileAutomationUrl = getRunningProfileAutomationUrl(profileId);
-//        if (runningProfileAutomationUrl.equals("Profile " + profileId + " is not running or not automated"))
-//            runningProfileAutomationUrl = startProfile(profileId);
-        String runningProfileAutomationUrl = "http://127.0.0.1:51819";
-//        String runningProfileAutomationUrl = startProfile(profileId);
-        log.info("Connecting to: " + runningProfileAutomationUrl);
-        ChromeOptions options = new ChromeOptions();
-        $ = new RemoteWebDriver(new URI(runningProfileAutomationUrl).toURL(), options);
+        MultiloginWebDriver multiloginWebDriver = new MultiloginWebDriver(profileId);
+//        $ = multiloginWebDriver.get();
+        $ = multiloginWebDriver.apply(51819);
         $.manage().window().maximize();
         return $;
     }
@@ -203,7 +185,7 @@ public class Tester {
             loot /= 2;
             shipsAmount = loot / capacity;
         }
-        log.info(String.format("Finished farming %s there is %skk loot left which would require %s ships only.", spyReport.address(), loot/1000000, shipsAmount));
+        log.info(String.format("Finished farming %s there is %skk loot left which would require %s ships only.", spyReport.address(), loot / 1000000, shipsAmount));
     }
 
     public static Fleet2 chooseGivenAmountOfShips(int shipAmount, String shipName, Fleet1 fleet) {
@@ -222,59 +204,5 @@ public class Tester {
         throw new IllegalStateException("Cannot send fleet - all slot taken");
     }
 
-    private static String getRunningProfileAutomationUrl(String profileId) throws IOException {
-        /*Send GET request to start the browser profile by profileId. Returns response in the following format:
-        '{"status":"OK","value":"http://127.0.0.1:XXXXX"}', where XXXXX is the localhost port on which browser profile is
-        launched. Please make sure that you have Multilogin listening port set to 35000. Otherwise please change the port
-        value in the url string*/
-        String url = "http://127.0.0.1:32002/api/v1/profile/selenium?profileId=" + profileId;
 
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        con.setRequestMethod("GET");
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuilder response = new StringBuilder();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-        //Get JSON text from the response and return the value by key "value"
-        Gson gson = new Gson();
-        HashMap hashMap = gson.fromJson(response.toString(), HashMap.class);
-        return hashMap.get("value").toString();
-    }
-
-    private static String startProfile(String profileId) throws IOException {
-        /*Send GET request to start the browser profile by profileId. Returns response in the following format:
-        '{"status":"OK","value":"http://127.0.0.1:XXXXX"}', where XXXXX is the localhost port on which browser profile is
-        launched. Please make sure that you have Multilogin listening port set to 35000. Otherwise please change the port
-        value in the url string*/
-        String url = "http://127.0.0.1:32002/api/v1/profile/start?automation=true&profileId=" + profileId;
-
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        con.setRequestMethod("GET");
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuilder response = new StringBuilder();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-        //Get JSON text from the response and return the value by key "value"
-        Gson gson = new Gson();
-        HashMap hashMap = gson.fromJson(response.toString(), HashMap.class);
-        return hashMap.get("value").toString();
-    }
 }
