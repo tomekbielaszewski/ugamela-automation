@@ -82,7 +82,7 @@ public class Fleet1 extends Page {
             return Fleet1.this;
         }
 
-        public Fleet1 select(int amount) {
+        public Fleet1 select(long amount) {
             validateState();
             this.shipRow.findElement(By.cssSelector("th > input")).sendKeys(String.valueOf(amount));
             return Fleet1.this;

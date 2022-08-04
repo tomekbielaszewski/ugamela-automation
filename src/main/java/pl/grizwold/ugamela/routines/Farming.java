@@ -76,7 +76,9 @@ public class Farming {
     public void farmFromSpyReport(SpyReports.SpyReport spyReport) {
         long capacity = 125000;
         long minimumShips = 200;
+        long warshipAmount = 200;
         String shipName = "Mega transporter";
+        String warshipName = "Okręt wojenny";
 
         long resourcesSum = (spyReport.metal() + spyReport.cristal() + spyReport.deuterium());
         long loot = resourcesSum / 2;
@@ -95,7 +97,12 @@ public class Farming {
             try {
                 Fleet1 fleet1 = spyReport.attack();
 
-                new FleetMovement().chooseGivenAmountOfShips((int) shipsAmount, shipName, fleet1)
+                FleetMovement fleetMovement = new FleetMovement();
+                fleetMovement.chooseGivenAmountOfShips(shipsAmount, shipName, fleet1);
+                fleetMovement.chooseGivenAmountOfShips(warshipAmount, warshipName, fleet1);
+                if (!fleet1.canSendFleet())
+                    throw new IllegalStateException("Cannot send fleet - all slot taken");
+                fleet1.next()
                         .next()
                         .selectMission("Attack")
                         .next();

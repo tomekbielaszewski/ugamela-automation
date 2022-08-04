@@ -1,6 +1,7 @@
 package pl.grizwold.webdriver;
 
 import com.google.gson.Gson;
+import lombok.extern.java.Log;
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -17,6 +18,7 @@ import java.util.function.Supplier;
  * Multilogin project used here as a convenient way of obtaining the Selenium WebDriver with full browser fingerprint masking.
  * <a href="https://multilogin.com/download/">Multilogin download page</a>
  */
+@Log
 public class MultiloginWebDriver implements Supplier<WebDriver>, Function<Integer, WebDriver> {
     private final String profileId;
 
@@ -39,6 +41,7 @@ public class MultiloginWebDriver implements Supplier<WebDriver>, Function<Intege
             }
         }
         try {
+            log.info("Connecting to Remote WebDriver at " + runningProfileAutomationUrl);
             return new RemoteWebDriver(new URI(runningProfileAutomationUrl).toURL(), new ChromeOptions());
         } catch (MalformedURLException | URISyntaxException e) {
             throw new RuntimeException(e);
