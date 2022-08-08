@@ -9,6 +9,9 @@ import pl.grizwold.webdriver.MultiloginWebDriver;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Log
 public class Tester {
@@ -18,15 +21,32 @@ public class Tester {
 
         UgamelaSession session = new UgamelaSession($).login();
 
-        Address startAddress = new Address("[1:60:1]");
+        Address startAddress;
+
+        try {
+            startAddress = readAddress();
+        } catch (IOException e) {
+            e.printStackTrace();
+            startAddress = new Address("[6:344:1]");
+        }
+
         Farming farming = new Farming();
 
         while (true) {
-            farming.farmFromSpyReports(session);
-            Galaxy.GALAXY_WAIT_TIMEOUT = 5;
-            Galaxy galaxy = new Galaxy(session).goTo(startAddress);
-            startAddress = farming.scanGalaxy(10, 30, galaxy);
-            log.info("Restarting the cycle from " + startAddress);
+            try {
+                log.info("Starting the cycle from " + startAddress);
+                farming.farmFromSpyReports(session);
+                Galaxy.GALAXY_WAIT_TIMEOUT = 5;
+                Galaxy galaxy = new Galaxy(session).goTo(startAddress);
+                startAddress = farming.scanGalaxy(10, 30, galaxy);
+                log.info("Ended the cycle on " + startAddress);
+                saveAddress(startAddress);
+            } catch (Exception e) {
+                log.severe(e.getMessage());
+                e.printStackTrace();
+                log.info("########################");
+                Thread.sleep(10000);
+            }
         }
 
 //        Buildings buildings = new Buildings(session);
@@ -42,13 +62,26 @@ public class Tester {
 //        } while (isUpgradable);
     }
 
+    private static void saveAddress(Address startAddress) throws IOException {
+        Path path = Paths.get("./address");
+        if(!Files.exists(path)) {
+            Files.createFile(path);
+        }
+        Files.writeString(path, startAddress.toString());
+    }
+
+    private static Address readAddress() throws IOException {
+        String file = Files.readString(Paths.get("./address"));
+        return new Address(file);
+    }
+
     private static WebDriver connectToBrowser() {
         WebDriver $;
 
         String profileId = "5973191a-25d3-4047-b5d1-0803344b965f";
         MultiloginWebDriver multiloginWebDriver = new MultiloginWebDriver(profileId);
 //        $ = multiloginWebDriver.get();
-        $ = multiloginWebDriver.apply(51819);
+        $ = multiloginWebDriver.apply(28326);
         $.manage().window().maximize();
         return $;
     }
