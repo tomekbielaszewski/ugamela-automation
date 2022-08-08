@@ -4,8 +4,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import pl.grizwold.ugamela.UgamelaSession;
+import pl.grizwold.ugamela.page.model.Cost;
 
 import java.util.Optional;
+import java.util.Scanner;
 
 public class Buildings extends Page {
     private static final String BUILDINGS_PAGE = "buildings.php";
@@ -102,8 +104,78 @@ public class Buildings extends Page {
         }
         return false;
     }
-//
-//    public Cost cost(Building building) {
-//        getBuildingInfo(building).findElements()
-//    }
+
+    public Cost[] cost(Building building) {
+        select(building);
+        Optional<Cost> optionalCost = $().findElements(By.id(building.info))
+                .stream().findFirst()
+                .map(el -> el.findElements(By.className("infoResDiv")).stream()
+                        .map(this::infoResourceElementToCost)
+                        .reduce(new Cost(), Cost::add));
+        Optional<Cost> optionalMissingResources = $().findElements(By.id(building.info))
+                .stream().findFirst()
+                .map(el -> el.findElements(By.className("infoResDiv")).stream()
+                        .map(this::missingResourcesElementToCost)
+                        .reduce(new Cost(), Cost::add));
+        if(optionalCost.isEmpty()) {
+            throw new IllegalStateException("Couldn't get cost of " + building.name());
+        }
+        return new Cost[] {
+                optionalCost.get(),
+                optionalMissingResources.orElse(new Cost())
+        };
+    }
+
+    private Cost infoResourceElementToCost(WebElement infoResourceDiv) {
+        Optional<Long> optAmount = extractAmountFromResourceCostElement(infoResourceDiv.findElements(By.tagName("span")).stream().findFirst());
+        Cost cost = new Cost();
+        if(optAmount.isEmpty())
+            throw new IllegalStateException("Couldn't extract cost from the building info tab");
+        if(isMetalInfo(infoResourceDiv)) {
+            cost.metal = optAmount.get();
+        }
+        if(isCristalInfo(infoResourceDiv)) {
+            cost.crystal = optAmount.get();
+        }
+        if(isDeuteriumInfo(infoResourceDiv)) {
+            cost.deuterium = optAmount.get();
+        }
+        return cost;
+    }
+
+    private Cost missingResourcesElementToCost(WebElement infoResourceDiv) {
+        Optional<Long> optAmountMissing = extractAmountFromResourceCostElement(infoResourceDiv.findElements(By.cssSelector("span:last-child")).stream().findFirst());
+        Cost costMissing = new Cost();
+        if(isMetalInfo(infoResourceDiv)) {
+            costMissing.metal = optAmountMissing.orElse(0L);
+        }
+        if(isCristalInfo(infoResourceDiv)) {
+            costMissing.crystal = optAmountMissing.orElse(0L);
+        }
+        if(isDeuteriumInfo(infoResourceDiv)) {
+            costMissing.deuterium = optAmountMissing.orElse(0L);
+        }
+        return costMissing;
+    }
+
+    private boolean isMetalInfo(WebElement infoResourceDiv) {
+        return infoResourceDiv.findElements(By.className("infoRes_metal")).size() > 0;
+    }
+
+    private boolean isCristalInfo(WebElement infoResourceDiv) {
+        return infoResourceDiv.findElements(By.className("infoRes_crystal")).size() > 0;
+    }
+
+    private boolean isDeuteriumInfo(WebElement infoResourceDiv) {
+        return infoResourceDiv.findElements(By.className("infoRes_deuterium")).size() > 0;
+    }
+
+    private Optional<Long> extractAmountFromResourceCostElement(Optional<WebElement> resourceCost) {
+        return resourceCost.map(WebElement::getText)
+                .map(t -> t.replaceAll("\\.", ""))
+                .map(t -> t.replaceAll("\\(-", ""))
+                .map(t -> t.replaceAll("\\)", ""))
+                .filter(t -> new Scanner(t).hasNextLong())
+                .map(t -> new Scanner(t).nextLong());
+    }
 }

@@ -2,8 +2,10 @@ package pl.grizwold.ugamela;
 
 import lombok.extern.java.Log;
 import org.openqa.selenium.WebDriver;
+import pl.grizwold.ugamela.page.Buildings;
 import pl.grizwold.ugamela.page.Galaxy;
 import pl.grizwold.ugamela.page.model.Address;
+import pl.grizwold.ugamela.page.model.Cost;
 import pl.grizwold.ugamela.routines.Farming;
 import pl.grizwold.webdriver.MultiloginWebDriver;
 
@@ -21,33 +23,41 @@ public class Tester {
 
         UgamelaSession session = new UgamelaSession($).login();
 
-        Address startAddress;
+        Buildings buildings = new Buildings(session);
+        Cost[] cost = buildings.cost(Buildings.Building.BUILDING_TERRAFORMER);
+        System.out.printf("metal: %s, crystal: %s, deuterium: %s%n", cost[0].metal, cost[0].crystal, cost[0].deuterium);
+        System.out.printf("missing: metal: %s, crystal: %s, deuterium: %s%n", cost[1].metal, cost[1].crystal, cost[1].deuterium);
 
-        try {
-            startAddress = readAddress();
-        } catch (IOException e) {
-            e.printStackTrace();
-            startAddress = new Address("[6:344:1]");
-        }
+        System.out.println(buildings.isUpgradable(Buildings.Building.BUILDING_FUSION_POWER_PLANT));
+        ;
 
-        Farming farming = new Farming();
-
-        while (true) {
-            try {
-                log.info("Starting the cycle from " + startAddress);
-                farming.farmFromSpyReports(session);
-                Galaxy.GALAXY_WAIT_TIMEOUT = 5;
-                Galaxy galaxy = new Galaxy(session).goTo(startAddress);
-                startAddress = farming.scanGalaxy(10, 30, galaxy);
-                log.info("Ended the cycle on " + startAddress);
-                saveAddress(startAddress);
-            } catch (Exception e) {
-                log.severe(e.getMessage());
-                e.printStackTrace();
-                log.info("########################");
-                Thread.sleep(10000);
-            }
-        }
+//        Address startAddress;
+//
+//        try {
+//            startAddress = readAddress();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            startAddress = new Address("[6:344:1]");
+//        }
+//
+//        Farming farming = new Farming();
+//
+//        while (true) {
+//            try {
+//                log.info("Starting the cycle from " + startAddress);
+//                farming.farmFromSpyReports(session);
+//                Galaxy.GALAXY_WAIT_TIMEOUT = 5;
+//                Galaxy galaxy = new Galaxy(session).goTo(startAddress);
+//                startAddress = farming.scanGalaxy(10, 30, galaxy);
+//                log.info("Ended the cycle on " + startAddress);
+//                saveAddress(startAddress);
+//            } catch (Exception e) {
+//                log.severe(e.getMessage());
+//                e.printStackTrace();
+//                log.info("########################");
+//                Thread.sleep(10000);
+//            }
+//        }
 
 //        Buildings buildings = new Buildings(session);
 //        boolean isUpgradable;
