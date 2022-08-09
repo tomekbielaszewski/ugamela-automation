@@ -4,6 +4,7 @@ import lombok.extern.java.Log;
 import org.openqa.selenium.WebDriver;
 import pl.grizwold.ugamela.page.Buildings;
 import pl.grizwold.ugamela.page.Galaxy;
+import pl.grizwold.ugamela.page.Resources;
 import pl.grizwold.ugamela.page.model.Address;
 import pl.grizwold.ugamela.page.model.Cost;
 import pl.grizwold.ugamela.routines.Farming;
@@ -23,9 +24,13 @@ public class Tester {
 
         UgamelaSession session = new UgamelaSession($).login();
 
-        Buildings buildings = new Buildings(session);
-        Cost cost = buildings.upgradeCost(Buildings.Building.BUILDING_CRYSTAL_MINE, 47);
-        System.out.printf("metal: %s, crystal: %s, deuterium: %s%n", cost.metal, cost.crystal, cost.deuterium);
+        Resources r = new Resources(session);
+//        buildings.open();
+        Cost cost = new Cost(r.metal(), r.crystal(), r.deuterium());
+        Cost cap = new Cost(r.metalCapacity(), r.crystalCapacity(), r.deuteriumCapacity());
+//        Cost cost = buildings.upgradeCost(Buildings.Building.BUILDING_CRYSTAL_MINE, 47);
+        System.out.printf("Current: metal: %s, crystal: %s, deuterium: %s%n", cost.metal, cost.crystal, cost.deuterium);
+        System.out.printf("Capacit: metal: %s, crystal: %s, deuterium: %s%n", cap.metal, cap.crystal, cap.deuterium);
 //        System.out.printf("metal: %s, crystal: %s, deuterium: %s%n", cost[0].metal, cost[0].crystal, cost[0].deuterium);
 //        System.out.printf("missing: metal: %s, crystal: %s, deuterium: %s%n", cost[1].metal, cost[1].crystal, cost[1].deuterium);
 
