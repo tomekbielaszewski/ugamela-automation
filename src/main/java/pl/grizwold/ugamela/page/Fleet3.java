@@ -2,6 +2,7 @@ package pl.grizwold.ugamela.page;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
+import pl.grizwold.ugamela.page.model.Resources;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +43,11 @@ public class Fleet3 extends Page {
         return this;
     }
 
-    public Fleet3 loadResources(int metal, int cristal, int deuterium) {
+    public Fleet3 loadResources(Resources resources) {
+        return loadResources(resources.metal, resources.crystal, resources.deuterium);
+    }
+
+    public Fleet3 loadResources(long metal, long cristal, long deuterium) {
         validateState();
         $().findElement(By.cssSelector(METAL_AMOUNT_SELECTOR)).sendKeys(String.valueOf(metal));
         $().findElement(By.cssSelector(CRISTAL_AMOUNT_SELECTOR)).sendKeys(String.valueOf(cristal));

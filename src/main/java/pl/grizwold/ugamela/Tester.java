@@ -2,9 +2,11 @@ package pl.grizwold.ugamela;
 
 import lombok.extern.java.Log;
 import org.openqa.selenium.WebDriver;
+import pl.grizwold.ugamela.page.Buildings;
 import pl.grizwold.ugamela.page.ResourcePanel;
 import pl.grizwold.ugamela.page.model.Address;
 import pl.grizwold.ugamela.page.model.Resources;
+import pl.grizwold.ugamela.routines.Transport;
 import pl.grizwold.webdriver.MultiloginWebDriver;
 
 import java.io.IOException;
@@ -21,13 +23,24 @@ public class Tester {
 
         UgamelaSession session = new UgamelaSession($).login();
 
-        ResourcePanel r = new ResourcePanel(session);
+//        ResourcePanel r = new ResourcePanel(session);
 //        buildings.open();
-        Resources cost = new Resources(r.metal(), r.crystal(), r.deuterium());
-        Resources cap = new Resources(r.metalCapacity(), r.crystalCapacity(), r.deuteriumCapacity());
+//        Resources cost = new Resources(r.metal(), r.crystal(), r.deuterium());
+//        Resources cap = new Resources(r.metalCapacity(), r.crystalCapacity(), r.deuteriumCapacity());
 //        Cost cost = buildings.upgradeCost(Buildings.Building.BUILDING_CRYSTAL_MINE, 47);
-        System.out.printf("Current: metal: %s, crystal: %s, deuterium: %s%n", cost.metal, cost.crystal, cost.deuterium);
-        System.out.printf("Capacit: metal: %s, crystal: %s, deuterium: %s%n", cap.metal, cap.crystal, cap.deuterium);
+//        System.out.printf("Current: metal: %s, crystal: %s, deuterium: %s%n", cost.metal, cost.crystal, cost.deuterium);
+//        System.out.printf("Capacit: metal: %s, crystal: %s, deuterium: %s%n", cap.metal, cap.crystal, cap.deuterium);
+
+        Buildings buildings = new Buildings(session).open();
+        Resources toTransport1 = buildings.upgradeCost(Buildings.Building.BUILDING_ROBOT_FACTORY, 3, 16);
+        Resources toTransport2 = buildings.upgradeCost(Buildings.Building.BUILDING_NANITES_FACTORY, 1, 5);
+        System.out.println(toTransport1);
+        System.out.println(toTransport2);
+        Transport transport = new Transport();
+        int fromPlanet = 1;
+        int toPlanet = 10;
+        transport.transport(fromPlanet, toPlanet, toTransport1, session);
+        transport.transport(fromPlanet, toPlanet, toTransport2, session);
 //        System.out.printf("metal: %s, crystal: %s, deuterium: %s%n", cost[0].metal, cost[0].crystal, cost[0].deuterium);
 //        System.out.printf("missing: metal: %s, crystal: %s, deuterium: %s%n", cost[1].metal, cost[1].crystal, cost[1].deuterium);
 
