@@ -24,12 +24,13 @@ public class Tester {
         UgamelaSession session = new UgamelaSession($).login();
 
         Buildings buildings = new Buildings(session);
-        Cost[] cost = buildings.cost(Buildings.Building.BUILDING_TERRAFORMER);
-        System.out.printf("metal: %s, crystal: %s, deuterium: %s%n", cost[0].metal, cost[0].crystal, cost[0].deuterium);
-        System.out.printf("missing: metal: %s, crystal: %s, deuterium: %s%n", cost[1].metal, cost[1].crystal, cost[1].deuterium);
+        Cost cost = buildings.upgradeCost(Buildings.Building.BUILDING_CRYSTAL_MINE, 47);
+        System.out.printf("metal: %s, crystal: %s, deuterium: %s%n", cost.metal, cost.crystal, cost.deuterium);
+//        System.out.printf("metal: %s, crystal: %s, deuterium: %s%n", cost[0].metal, cost[0].crystal, cost[0].deuterium);
+//        System.out.printf("missing: metal: %s, crystal: %s, deuterium: %s%n", cost[1].metal, cost[1].crystal, cost[1].deuterium);
 
-        System.out.println(buildings.isUpgradable(Buildings.Building.BUILDING_FUSION_POWER_PLANT));
-        ;
+//        System.out.println(buildings.isUpgradable(Buildings.Building.BUILDING_FUSION_POWER_PLANT));
+//        ;
 
 //        Address startAddress;
 //

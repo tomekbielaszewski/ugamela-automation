@@ -13,32 +13,34 @@ public class Buildings extends Page {
     private static final String BUILDINGS_PAGE = "buildings.php";
 
     public enum Building {
-        BUILDING_METAL_MINE("El_1"),
-        BUILDING_CRYSTAL_MINE("El_2"),
-        BUILDING_DEUTERIUM_EXTRACTOR("El_3"),
-        BUILDING_SOLAR_PLANT("El_4"),
-        BUILDING_FUSION_POWER_PLANT("El_12"),
-        BUILDING_ROBOT_FACTORY("El_14"),
-        BUILDING_NANITES_FACTORY("El_15"),
-        BUILDING_DOCKS("El_21"),
-        BUILDING_METAL_STORAGE("El_22"),
-        BUILDING_CRISTAL_STORAGE("El_23"),
-        BUILDING_DEUTERIUM_STORAGE("El_24"),
-        BUILDING_LAB("El_31"),
-        BUILDING_TERRAFORMER("El_33"),
-        BUILDING_ALLY_DEPOSIT("El_34"),
-        BUILDING_ROCKETS("El_44"),
-        BUILDING_QUANTUM_GATE("El_50");
+        BUILDING_METAL_MINE("El_1", 1.5, new Cost(60, 15, 0)),
+        BUILDING_CRYSTAL_MINE("El_2", 1.6, new Cost(48, 24, 0)),
+        BUILDING_DEUTERIUM_EXTRACTOR("El_3", 1.5, new Cost(225, 75, 0)),
+        BUILDING_SOLAR_PLANT("El_4", 1.5, new Cost(75, 30, 0)),
+        BUILDING_FUSION_POWER_PLANT("El_12", 1.8, new Cost(900, 360, 180)),
+        BUILDING_ROBOT_FACTORY("El_14", 2, new Cost(400, 120, 200)),
+        BUILDING_NANITES_FACTORY("El_15", 2, new Cost(1000000, 500000, 100000)),
+        BUILDING_DOCKS("El_21", 2, new Cost(400, 200, 100)),
+        BUILDING_METAL_STORAGE("El_22", 2, new Cost(2000, 0, 0)),
+        BUILDING_CRISTAL_STORAGE("El_23", 2, new Cost(2000, 1000, 0)),
+        BUILDING_DEUTERIUM_STORAGE("El_24", 2, new Cost(2000, 2000, 0)),
+        BUILDING_LAB("El_31", 2, new Cost(200, 400, 200)),
+        BUILDING_TERRAFORMER("El_33", 2, new Cost(0, 50000, 100000, 1000)),
+        BUILDING_ALLY_DEPOSIT("El_34", 2, new Cost(20000, 40000, 0)),
+        BUILDING_ROCKETS("El_44", 2, new Cost(20000, 20000, 1000)),
+        BUILDING_QUANTUM_GATE("El_50", 2, new Cost(20));
 
         final String tab;
-
         final String info;
+        final double factor;
+        final Cost initialCost;
 
-        Building(String id) {
+        Building(String id, double factor, Cost initialCost) {
             this.tab = "ss" + id;
             this.info = "nfo" + id;
+            this.factor = factor;
+            this.initialCost = initialCost;
         }
-
     }
 
     public Buildings(UgamelaSession session) {
@@ -52,6 +54,24 @@ public class Buildings extends Page {
         WebElement buildingTab = getBuildingThumbnail(building);
         WebElement lvlContainer = buildingTab.findElement(By.cssSelector("div:nth-child(4)"));
         return Integer.parseInt(lvlContainer.getText());
+    }
+
+    public Cost upgradeCost(Building building, int toLevel) {
+        return upgradeCost(building.initialCost, toLevel, building.factor);
+    }
+
+    public Cost upgradeCost(Cost startCost, int toLevel, double factor) {
+        return upgradeCost(startCost, toLevel, toLevel, factor);
+    }
+
+    public Cost upgradeCost(Cost startCost, int fromLevel, int toLevel, double factor) {
+        return new Cost(
+                (long)(startCost.metal * Math.pow(factor, fromLevel - 1) * (Math.pow(factor, (toLevel - fromLevel + 1)) - 1) / (factor - 1)),
+                (long)(startCost.crystal * Math.pow(factor, fromLevel - 1) * (Math.pow(factor, (toLevel - fromLevel + 1)) - 1) / (factor - 1)),
+                (long)(startCost.deuterium * Math.pow(factor, fromLevel - 1) * (Math.pow(factor, (toLevel - fromLevel + 1)) - 1) / (factor - 1)),
+                (long)(startCost.energy * Math.pow(factor, fromLevel - 1) * (Math.pow(factor, (toLevel - fromLevel + 1)) - 1) / (factor - 1)),
+                (long)(startCost.antimatter * Math.pow(factor, fromLevel - 1) * (Math.pow(factor, (toLevel - fromLevel + 1)) - 1) / (factor - 1))
+        );
     }
 
     public int getLevelsInQueue(Building building) {
@@ -117,10 +137,10 @@ public class Buildings extends Page {
                 .map(el -> el.findElements(By.className("infoResDiv")).stream()
                         .map(this::missingResourcesElementToCost)
                         .reduce(new Cost(), Cost::add));
-        if(optionalCost.isEmpty()) {
+        if (optionalCost.isEmpty()) {
             throw new IllegalStateException("Couldn't get cost of " + building.name());
         }
-        return new Cost[] {
+        return new Cost[]{
                 optionalCost.get(),
                 optionalMissingResources.orElse(new Cost())
         };
@@ -129,15 +149,15 @@ public class Buildings extends Page {
     private Cost infoResourceElementToCost(WebElement infoResourceDiv) {
         Optional<Long> optAmount = extractAmountFromResourceCostElement(infoResourceDiv.findElements(By.tagName("span")).stream().findFirst());
         Cost cost = new Cost();
-        if(optAmount.isEmpty())
+        if (optAmount.isEmpty())
             throw new IllegalStateException("Couldn't extract cost from the building info tab");
-        if(isMetalInfo(infoResourceDiv)) {
+        if (isMetalInfo(infoResourceDiv)) {
             cost.metal = optAmount.get();
         }
-        if(isCristalInfo(infoResourceDiv)) {
+        if (isCristalInfo(infoResourceDiv)) {
             cost.crystal = optAmount.get();
         }
-        if(isDeuteriumInfo(infoResourceDiv)) {
+        if (isDeuteriumInfo(infoResourceDiv)) {
             cost.deuterium = optAmount.get();
         }
         return cost;
@@ -146,13 +166,13 @@ public class Buildings extends Page {
     private Cost missingResourcesElementToCost(WebElement infoResourceDiv) {
         Optional<Long> optAmountMissing = extractAmountFromResourceCostElement(infoResourceDiv.findElements(By.cssSelector("span:last-child")).stream().findFirst());
         Cost costMissing = new Cost();
-        if(isMetalInfo(infoResourceDiv)) {
+        if (isMetalInfo(infoResourceDiv)) {
             costMissing.metal = optAmountMissing.orElse(0L);
         }
-        if(isCristalInfo(infoResourceDiv)) {
+        if (isCristalInfo(infoResourceDiv)) {
             costMissing.crystal = optAmountMissing.orElse(0L);
         }
-        if(isDeuteriumInfo(infoResourceDiv)) {
+        if (isDeuteriumInfo(infoResourceDiv)) {
             costMissing.deuterium = optAmountMissing.orElse(0L);
         }
         return costMissing;
