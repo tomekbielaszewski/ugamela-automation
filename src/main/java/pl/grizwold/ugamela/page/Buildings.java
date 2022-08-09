@@ -63,10 +63,20 @@ public class Buildings extends Page {
         return upgradeCost(building.initialCost, toLevel, building.factor);
     }
 
+    /**
+     * Param fromLevel and toLevel are included. For example upgrade from 4 to 6 will calculate sum of upgrades: 4 + 5 + 6
+     */
+    public Resources upgradeCost(Building building, int fromLevel, int toLevel) {
+        return upgradeCost(building.initialCost, fromLevel, toLevel, building.factor);
+    }
+
     public Resources upgradeCost(Resources startCost, int toLevel, double factor) {
         return upgradeCost(startCost, toLevel, toLevel, factor);
     }
 
+    /**
+     * Param fromLevel and toLevel are included. For example upgrade from 4 to 6 will calculate sum of upgrades: 4 + 5 + 6
+     */
     public Resources upgradeCost(Resources startCost, int fromLevel, int toLevel, double factor) {
         return new Resources(
                 (long)(startCost.metal * Math.pow(factor, fromLevel - 1) * (Math.pow(factor, (toLevel - fromLevel + 1)) - 1) / (factor - 1)),
