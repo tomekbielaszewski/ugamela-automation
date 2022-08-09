@@ -45,12 +45,16 @@ public class Buildings extends Page {
 
     public Buildings(UgamelaSession session) {
         super(session);
-        if (!isUrlEndingWith(BUILDINGS_PAGE)) {
-            open(BUILDINGS_PAGE);
-        }
     }
 
-    public int getLevel(Building building) {
+    public Buildings open() {
+        if (!isUrlLike(BUILDINGS_PAGE)) {
+            open(BUILDINGS_PAGE);
+        }
+        return this;
+    }
+
+    public int currentLevel(Building building) {
         WebElement buildingTab = getBuildingThumbnail(building);
         WebElement lvlContainer = buildingTab.findElement(By.cssSelector("div:nth-child(4)"));
         return Integer.parseInt(lvlContainer.getText());
@@ -74,7 +78,7 @@ public class Buildings extends Page {
         );
     }
 
-    public int getLevelsInQueue(Building building) {
+    public int queuedLevels(Building building) {
         WebElement buildingTab = getBuildingThumbnail(building);
         int size = buildingTab.findElements(By.cssSelector("div:nth-child(5)")).size();
         if (size == 0) return 0;
@@ -85,8 +89,8 @@ public class Buildings extends Page {
                 .orElse(0);
     }
 
-    public int getTotalLevel(Building building) {
-        return getLevel(building) + getLevelsInQueue(building);
+    public int totalLevel(Building building) {
+        return currentLevel(building) + queuedLevels(building);
     }
 
     public boolean isUpgradable(Building building) {
@@ -123,14 +127,5 @@ public class Buildings extends Page {
             return true;
         }
         return false;
-    }
-
-    private Optional<Long> extractAmountFromResourceCostElement(Optional<WebElement> resourceCost) {
-        return resourceCost.map(WebElement::getText)
-                .map(t -> t.replaceAll("\\.", ""))
-                .map(t -> t.replaceAll("\\(-", ""))
-                .map(t -> t.replaceAll("\\)", ""))
-                .filter(t -> new Scanner(t).hasNextLong())
-                .map(t -> new Scanner(t).nextLong());
     }
 }

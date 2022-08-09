@@ -71,7 +71,7 @@ public class Fleet2 extends Page {
 
     private void validateState() {
         String currentUrl = $().getCurrentUrl();
-        if(currentUrl.endsWith(FLEET_2_PAGE))
+        if(isUrlLike(FLEET_2_PAGE))
             return;
         throw new IllegalStateException("Not on fleet2 page.\nCurrent page: " + currentUrl + "\nExpected page: " + FLEET_2_PAGE);
     }
