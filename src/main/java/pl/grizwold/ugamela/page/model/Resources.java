@@ -30,11 +30,40 @@ public class Resources {
         this.antimatter = antimatter;
     }
 
-    public Resources add(Resources cost) {
+    public boolean isLargerThan(Resources than) {
+        return this.metal > than.metal &&
+                this.crystal > than.crystal &&
+                this.deuterium > than.deuterium &&
+                this.energy > than.energy &&
+                this.antimatter > than.antimatter;
+    }
+
+    public Resources add(Resources add) {
         return new Resources(
-                this.metal + cost.metal,
-                this.crystal + cost.crystal,
-                this.deuterium + cost.deuterium
+                this.metal + add.metal,
+                this.crystal + add.crystal,
+                this.deuterium + add.deuterium
         );
+    }
+
+    public Resources subtract(Resources sub) {
+        return new Resources(
+                this.metal - sub.metal,
+                this.crystal - sub.crystal,
+                this.deuterium - sub.deuterium
+        );
+    }
+
+    public long requiredCargo() {
+        return metal + crystal + deuterium;
+    }
+
+    @Override
+    public String toString() {
+        if (antimatter > 0)
+            return String.format("antimatter: %s", antimatter);
+        if (energy > 0)
+            return String.format("metal: %s | crystal %s | deuterium %s | energy %s", metal, crystal, deuterium, energy);
+        return String.format("metal: %s | crystal %s | deuterium %s", metal, crystal, deuterium);
     }
 }
