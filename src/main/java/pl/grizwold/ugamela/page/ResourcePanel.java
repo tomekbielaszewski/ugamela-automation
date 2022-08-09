@@ -3,12 +3,29 @@ package pl.grizwold.ugamela.page;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import pl.grizwold.ugamela.UgamelaSession;
+import pl.grizwold.ugamela.page.model.Resources;
 
 import java.util.Scanner;
 
-public class Resources extends Page {
-    public Resources(UgamelaSession session) {
+public class ResourcePanel extends Page {
+    public ResourcePanel(UgamelaSession session) {
         super(session);
+    }
+
+    public Resources resources() {
+        return new Resources(
+                metal(),
+                crystal(),
+                deuterium()
+        );
+    }
+
+    public Resources capacity() {
+        return new Resources(
+                metalCapacity(),
+                crystalCapacity(),
+                deuteriumCapacity()
+        );
     }
 
     public long metal() {

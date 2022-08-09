@@ -2,12 +2,9 @@ package pl.grizwold.ugamela;
 
 import lombok.extern.java.Log;
 import org.openqa.selenium.WebDriver;
-import pl.grizwold.ugamela.page.Buildings;
-import pl.grizwold.ugamela.page.Galaxy;
-import pl.grizwold.ugamela.page.Resources;
+import pl.grizwold.ugamela.page.ResourcePanel;
 import pl.grizwold.ugamela.page.model.Address;
-import pl.grizwold.ugamela.page.model.Cost;
-import pl.grizwold.ugamela.routines.Farming;
+import pl.grizwold.ugamela.page.model.Resources;
 import pl.grizwold.webdriver.MultiloginWebDriver;
 
 import java.io.IOException;
@@ -24,10 +21,10 @@ public class Tester {
 
         UgamelaSession session = new UgamelaSession($).login();
 
-        Resources r = new Resources(session);
+        ResourcePanel r = new ResourcePanel(session);
 //        buildings.open();
-        Cost cost = new Cost(r.metal(), r.crystal(), r.deuterium());
-        Cost cap = new Cost(r.metalCapacity(), r.crystalCapacity(), r.deuteriumCapacity());
+        Resources cost = new Resources(r.metal(), r.crystal(), r.deuterium());
+        Resources cap = new Resources(r.metalCapacity(), r.crystalCapacity(), r.deuteriumCapacity());
 //        Cost cost = buildings.upgradeCost(Buildings.Building.BUILDING_CRYSTAL_MINE, 47);
         System.out.printf("Current: metal: %s, crystal: %s, deuterium: %s%n", cost.metal, cost.crystal, cost.deuterium);
         System.out.printf("Capacit: metal: %s, crystal: %s, deuterium: %s%n", cap.metal, cap.crystal, cap.deuterium);
