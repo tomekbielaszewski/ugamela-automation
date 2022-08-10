@@ -23,15 +23,15 @@ import java.nio.file.Paths;
 public class Tester {
     private static final String MOTHERLAND = "Sol";
     private static final String[] COLONIES = new String[]{
-            "Mercurius",
-            "Venus",
-            "Terra",
-            "Mars",
-            "Neptunus",
-            "Uranus",
-            "Jupiter",
-            "Saturnus",
-            "Pluto"
+            /*0*/ "Mercurius",
+            /*1*/ "Venus",
+            /*2*/ "Terra",
+            /*3*/ "Mars",
+            /*4*/ "Neptunus",
+            /*5*/ "Uranus",
+            /*6*/ "Jupiter",
+            /*7*/ "Saturnus",
+            /*8*/ "Pluto"
     };
 
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
@@ -39,9 +39,12 @@ public class Tester {
 
         UgamelaSession session = new UgamelaSession($).login();
 
-//        farmWholeGalaxy(session);
+        farmWholeGalaxy(session);
 
-        new Economy().collectResourcesFromColonies(session, "Mega transporter", MOTHERLAND, COLONIES);
+//        new Economy().collectResourcesFromColonies(session, "Mega transporter", MOTHERLAND, COLONIES);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_SOLAR_PLANT, 27, 30, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_CRYSTAL_MINE, 25, 30, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_METAL_MINE, 27, 30, session);
     }
 
     private static void farmWholeGalaxy(UgamelaSession session) throws InterruptedException {
