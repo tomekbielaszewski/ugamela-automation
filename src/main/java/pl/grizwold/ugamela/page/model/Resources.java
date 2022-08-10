@@ -31,10 +31,10 @@ public class Resources {
     }
 
     public boolean isLargerThan(Resources than) {
-        return this.metal > than.metal &&
-                this.crystal > than.crystal &&
-                this.deuterium > than.deuterium &&
-                this.energy > than.energy &&
+        return this.metal > than.metal ||
+                this.crystal > than.crystal ||
+                this.deuterium > than.deuterium ||
+                this.energy > than.energy ||
                 this.antimatter > than.antimatter;
     }
 
