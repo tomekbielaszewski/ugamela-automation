@@ -21,7 +21,7 @@ public class Buildings extends Page {
         BUILDING_NANITES_FACTORY("El_15", 2, new Resources(1000000, 500000, 100000)),
         BUILDING_DOCKS("El_21", 2, new Resources(400, 200, 100)),
         BUILDING_METAL_STORAGE("El_22", 2, new Resources(2000, 0, 0)),
-        BUILDING_CRISTAL_STORAGE("El_23", 2, new Resources(2000, 1000, 0)),
+        BUILDING_CRYSTAL_STORAGE("El_23", 2, new Resources(2000, 1000, 0)),
         BUILDING_DEUTERIUM_STORAGE("El_24", 2, new Resources(2000, 2000, 0)),
         BUILDING_LAB("El_31", 2, new Resources(200, 400, 200)),
         BUILDING_TERRAFORMER("El_33", 2, new Resources(0, 50000, 100000, 1000)),
