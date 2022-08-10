@@ -51,6 +51,14 @@ public class Resources {
                 this.metal - sub.metal,
                 this.crystal - sub.crystal,
                 this.deuterium - sub.deuterium
+        ).normalize();
+    }
+
+    public Resources subtractAllowingNegatives(Resources sub) {
+        return new Resources(
+                this.metal - sub.metal,
+                this.crystal - sub.crystal,
+                this.deuterium - sub.deuterium
         );
     }
 
@@ -65,5 +73,15 @@ public class Resources {
         if (energy > 0)
             return String.format("metal: %s | crystal %s | deuterium %s | energy %s", metal, crystal, deuterium, energy);
         return String.format("metal: %s | crystal %s | deuterium %s", metal, crystal, deuterium);
+    }
+
+    private Resources normalize() {
+        return new Resources(
+                this.metal < 0 ? 0 : this.metal,
+                this.crystal < 0 ? 0 : this.crystal,
+                this.deuterium < 0 ? 0 : this.deuterium,
+                this.energy < 0 ? 0 : this.energy,
+                this.antimatter < 0 ? 0 : this.antimatter
+        );
     }
 }
