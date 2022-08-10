@@ -1,24 +1,21 @@
 package pl.grizwold.ugamela.routines;
 
+import lombok.extern.java.Log;
 import pl.grizwold.ugamela.UgamelaSession;
 import pl.grizwold.ugamela.page.Buildings;
 import pl.grizwold.ugamela.page.Fleet1;
 import pl.grizwold.ugamela.page.PlanetChooser;
-import pl.grizwold.ugamela.page.ResourcePanel;
 import pl.grizwold.ugamela.page.model.Resources;
 
+@Log
 public class Economy {
     public void sendResourcesForBuildingConstruction(String fromPlanet, String toPlanet, Buildings.Building building, int fromLevel, int toLevel, UgamelaSession session) {
-        PlanetChooser planetChooser = new PlanetChooser(session);
         Buildings buildings = new Buildings(session).open();
-        ResourcePanel resourcePanel = new ResourcePanel(session);
 
-        planetChooser.openPlanet(toPlanet);
-        Resources availableResources = resourcePanel.resources();
-        Resources buildingsCost = buildings.upgradeCost(Buildings.Building.BUILDING_NANITES_FACTORY, fromLevel, toLevel);
-        Resources toTransport = buildingsCost.subtract(availableResources);
+        Resources buildingsCost = buildings.upgradeCost(building, fromLevel, toLevel);
+        log.info(String.format("Upgrade of %s from %s to %s will cost: %s", building, fromLevel, toLevel, buildingsCost));
         FleetMissions mission = new FleetMissions();
-        mission.transport(fromPlanet, toPlanet, toTransport, session);
+        mission.transport(fromPlanet, toPlanet, buildingsCost, session);
     }
 
     public void collectResourcesFromColonies(UgamelaSession session, String shipName, String motherlandName, String... colonies) {
