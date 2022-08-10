@@ -49,7 +49,7 @@ public class FleetMissions {
             throw new IllegalStateException("Not enough resources on the planet. Missing: " + availableResources.subtract(transport));
         }
 
-        long amountOfTransportShips = transport.requiredCargo() / TRANSPORT_SHIP_CAPACITY;
+        long amountOfTransportShips = (long) Math.ceil(((double) transport.requiredCargo()) / TRANSPORT_SHIP_CAPACITY);
         Fleet1 fleet1 = new Fleet1(session);
         this.chooseGivenAmountOfShips(amountOfTransportShips, TRANSPORT_SHIP, fleet1);
 
