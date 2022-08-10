@@ -44,9 +44,9 @@ public class FleetMissions {
         planetChooser.openPlanet(fromPlanet);
 
         ResourcePanel resourcePanel = new ResourcePanel(session);
-        Resources availableResources = resourcePanel.resources();
-        if(availableResources.isLargerThan(transport)) {
-            throw new IllegalStateException("Not enough resources on the planet. Missing: " + availableResources.subtract(transport));
+        Resources availableResources = resourcePanel.availableResources();
+        if(transport.isLargerThan(availableResources)) {
+            throw new IllegalStateException("Not enough resources on the planet. Missing: " + availableResources.subtractAllowingNegatives(transport));
         }
 
         long amountOfTransportShips = (long) Math.ceil(((double) transport.requiredCargo()) / TRANSPORT_SHIP_CAPACITY);

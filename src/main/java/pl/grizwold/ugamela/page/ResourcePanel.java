@@ -12,7 +12,7 @@ public class ResourcePanel extends Page {
         super(session);
     }
 
-    public Resources resources() {
+    public Resources availableResources() {
         return new Resources(
                 metal(),
                 crystal(),
