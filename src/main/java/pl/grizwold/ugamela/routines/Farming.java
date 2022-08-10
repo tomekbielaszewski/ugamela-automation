@@ -97,7 +97,7 @@ public class Farming {
             try {
                 Fleet1 fleet1 = spyReport.attack();
 
-                FleetMovement fleetMovement = new FleetMovement();
+                FleetMissions fleetMovement = new FleetMissions();
                 fleetMovement.chooseGivenAmountOfShips(shipsAmount, shipName, fleet1);
                 fleetMovement.chooseGivenAmountOfShips(warshipAmount, warshipName, fleet1);
                 if (!fleet1.canSendFleet())
