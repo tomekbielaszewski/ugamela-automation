@@ -2,8 +2,10 @@ package pl.grizwold.ugamela;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
+import pl.grizwold.ugamela.page.Buildings;
 import pl.grizwold.ugamela.page.Galaxy;
 import pl.grizwold.ugamela.page.model.Address;
+import pl.grizwold.ugamela.routines.Economy;
 import pl.grizwold.ugamela.routines.Farming;
 import pl.grizwold.webdriver.MultiloginWebDriver;
 
@@ -33,7 +35,7 @@ public class Tester {
 
         UgamelaSession session = new UgamelaSession($).login();
 
-        farmWholeGalaxy(session);
+//        farmWholeGalaxy(session);
 
 //        new Economy().collectResourcesFromColonies(session, "Mega transporter", MOTHERLAND, COLONIES);
 
@@ -41,12 +43,25 @@ public class Tester {
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_CRYSTAL_MINE, 25, 30, session);
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_METAL_MINE, 27, 30, session);
 
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[3], Buildings.Building.BUILDING_NANITES_FACTORY, 17, 19, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[4], Buildings.Building.BUILDING_NANITES_FACTORY, 5, 8, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[5], Buildings.Building.BUILDING_NANITES_FACTORY, 5, 8, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[6], Buildings.Building.BUILDING_NANITES_FACTORY, 7, 8, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[7], Buildings.Building.BUILDING_NANITES_FACTORY, 5, 8, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_NANITES_FACTORY, 5, 8, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[0], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[1], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[2], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[3], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[4], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[5], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[6], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[7], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+//
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[3], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 16, 18, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[4], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 11, 18, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[5], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 11, 18, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[6], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 11, 18, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[7], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 11, 18, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 11, 18, session);
+
+//        Resources resources = new Buildings(session).upgradeCost(Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10).multiply(9);
+//        log.info(resources.toString());
 
 //        for (String colony : COLONIES) {
 //            new FleetMissions().transport(MOTHERLAND, colony, new Resources(0,0,10), session);
