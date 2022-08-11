@@ -25,7 +25,7 @@ public class FleetMissions {
             throw new IllegalStateException("There is not enough ships available \"" + shipName + "\" amount " + shipAmount);
         availableShip.ifPresent(availableFleet -> availableFleet.select(shipAmount));
 
-        log.info(String.format("%s x %s selected for mission", shipAmount, shipName));
+        log.info(String.format("%sx %s selected for mission", shipAmount, shipName));
 
         return fleet;
     }
@@ -41,7 +41,7 @@ public class FleetMissions {
         availableShip.get().selectAll();
         int amount = availableShip.get().shipAmount();
 
-        log.info(String.format("All %s x %s selected for mission", amount, shipName));
+        log.info(String.format("All %sx %s selected for mission", amount, shipName));
 
         return fleet;
     }
@@ -68,7 +68,7 @@ public class FleetMissions {
                 .loadResources(transport)
                 .selectMission("Transport")
                 .next();
-        log.info(String.format("%s x %s sent on a transport mission from %s to %s. Cargo: %s", TRANSPORT_SHIP, amountOfTransportShips, fromPlanet, toPlanet, transport));
+        log.info(String.format("%sx %s sent on a transport mission from %s to %s. Cargo: %s", amountOfTransportShips, TRANSPORT_SHIP, fromPlanet, toPlanet, transport));
     }
 
     public void station(String fromPlanet, String toPlanet, int shipAmount, String shipName, UgamelaSession session) {
@@ -85,6 +85,6 @@ public class FleetMissions {
                 .next()
                 .selectMission("Station")
                 .next();
-        log.info(String.format("%s x %s sent on a stationing mission from %s to %s", shipName, shipAmount, fromPlanet, toPlanet));
+        log.info(String.format("%sx %s sent on a stationing mission from %s to %s", shipAmount, shipName, fromPlanet, toPlanet));
     }
 }
