@@ -2,6 +2,8 @@ package pl.grizwold.ugamela.page.model;
 
 import lombok.NoArgsConstructor;
 
+import java.text.NumberFormat;
+
 @NoArgsConstructor
 public class Resources {
     public long metal;
@@ -46,6 +48,14 @@ public class Resources {
         );
     }
 
+    public Resources multiply(int mul) {
+        return new Resources(
+                this.metal * mul,
+                this.crystal * mul,
+                this.deuterium * mul
+        );
+    }
+
     public Resources subtract(Resources sub) {
         return new Resources(
                 this.metal - sub.metal,
@@ -68,11 +78,14 @@ public class Resources {
 
     @Override
     public String toString() {
+        NumberFormat n = NumberFormat.getInstance();
         if (antimatter > 0)
-            return String.format("antimatter: %s", antimatter);
+            return String.format("antimatter: %s", n.format(antimatter));
         if (energy > 0)
-            return String.format("metal: %s | crystal %s | deuterium %s | energy %s", metal, crystal, deuterium, energy);
-        return String.format("metal: %s | crystal %s | deuterium %s", metal, crystal, deuterium);
+            return String.format("metal: %s | crystal %s | deuterium %s | energy %s",
+                    n.format(metal), n.format(crystal), n.format(deuterium), n.format(energy));
+        return String.format("metal: %s | crystal %s | deuterium %s",
+                n.format(metal), n.format(crystal), n.format(deuterium));
     }
 
     private Resources normalize() {
