@@ -1,7 +1,7 @@
 package pl.grizwold.ugamela.routines;
 
 import lombok.SneakyThrows;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import pl.grizwold.ugamela.UgamelaSession;
 import pl.grizwold.ugamela.page.Fleet1;
 import pl.grizwold.ugamela.page.Galaxy;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 import static java.util.function.Predicate.not;
 
-@Log
+@Slf4j
 public class Farming {
 
     public Address scanGalaxy(int systemsToScan, int maxScanRetries, Galaxy galaxy)

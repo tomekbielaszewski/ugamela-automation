@@ -1,16 +1,10 @@
 package pl.grizwold.ugamela;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
-import pl.grizwold.ugamela.page.Buildings;
 import pl.grizwold.ugamela.page.Galaxy;
-import pl.grizwold.ugamela.page.PlanetChooser;
-import pl.grizwold.ugamela.page.ResourcePanel;
 import pl.grizwold.ugamela.page.model.Address;
-import pl.grizwold.ugamela.page.model.Resources;
-import pl.grizwold.ugamela.routines.Economy;
 import pl.grizwold.ugamela.routines.Farming;
-import pl.grizwold.ugamela.routines.FleetMissions;
 import pl.grizwold.webdriver.MultiloginWebDriver;
 
 import java.io.IOException;
@@ -19,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@Log
+@Slf4j
 public class Tester {
     private static final String MOTHERLAND = "Sol";
     private static final String[] COLONIES = new String[]{
@@ -42,9 +36,21 @@ public class Tester {
         farmWholeGalaxy(session);
 
 //        new Economy().collectResourcesFromColonies(session, "Mega transporter", MOTHERLAND, COLONIES);
+
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_SOLAR_PLANT, 27, 30, session);
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_CRYSTAL_MINE, 25, 30, session);
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_METAL_MINE, 27, 30, session);
+
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[3], Buildings.Building.BUILDING_LAB, 17, 19, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[4], Buildings.Building.BUILDING_LAB, 1, 19, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[5], Buildings.Building.BUILDING_LAB, 1, 19, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[6], Buildings.Building.BUILDING_LAB, 1, 19, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[7], Buildings.Building.BUILDING_LAB, 1, 19, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_LAB, 1, 19, session);
+
+//        for (String colony : COLONIES) {
+//            new FleetMissions().transport(MOTHERLAND, colony, new Resources(0,0,10), session);
+//        }
     }
 
     private static void farmWholeGalaxy(UgamelaSession session) throws InterruptedException {
@@ -69,7 +75,7 @@ public class Tester {
                 log.info("Ended the cycle on " + startAddress);
                 saveAddress(startAddress);
             } catch (Exception e) {
-                log.severe(e.getMessage());
+                log.error(e.getMessage());
                 e.printStackTrace();
                 log.info("########################");
                 Thread.sleep(10000);

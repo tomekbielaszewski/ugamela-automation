@@ -1,7 +1,7 @@
 package pl.grizwold.webdriver;
 
 import com.google.gson.Gson;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  * Multilogin project used here as a convenient way of obtaining the Selenium WebDriver with full browser fingerprint masking.
  * <a href="https://multilogin.com/download/">Multilogin download page</a>
  */
-@Log
+@Slf4j
 public class MultiloginWebDriver implements Supplier<WebDriver>, Function<Integer, WebDriver> {
     private final String profileId;
 

@@ -1,13 +1,13 @@
 package pl.grizwold.ugamela.routines;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import pl.grizwold.ugamela.UgamelaSession;
 import pl.grizwold.ugamela.page.Buildings;
 import pl.grizwold.ugamela.page.Fleet1;
 import pl.grizwold.ugamela.page.PlanetChooser;
 import pl.grizwold.ugamela.page.model.Resources;
 
-@Log
+@Slf4j
 public class Economy {
     public void sendResourcesForBuildingConstruction(String fromPlanet, String toPlanet, Buildings.Building building, int fromLevel, int toLevel, UgamelaSession session) {
         Buildings buildings = new Buildings(session).open();

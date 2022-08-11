@@ -1,6 +1,6 @@
 package pl.grizwold.ugamela.routines;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import pl.grizwold.ugamela.UgamelaSession;
 import pl.grizwold.ugamela.page.Fleet1;
 import pl.grizwold.ugamela.page.PlanetChooser;
@@ -9,7 +9,7 @@ import pl.grizwold.ugamela.page.model.Resources;
 
 import java.util.Optional;
 
-@Log
+@Slf4j
 public class FleetMissions {
     private static final String TRANSPORT_SHIP = "Mega transporter";
     private static final long TRANSPORT_SHIP_CAPACITY = 125000;
