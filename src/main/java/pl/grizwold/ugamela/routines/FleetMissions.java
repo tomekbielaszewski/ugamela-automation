@@ -1,5 +1,6 @@
 package pl.grizwold.ugamela.routines;
 
+import lombok.extern.java.Log;
 import pl.grizwold.ugamela.UgamelaSession;
 import pl.grizwold.ugamela.page.Fleet1;
 import pl.grizwold.ugamela.page.PlanetChooser;
@@ -8,6 +9,7 @@ import pl.grizwold.ugamela.page.model.Resources;
 
 import java.util.Optional;
 
+@Log
 public class FleetMissions {
     private static final String TRANSPORT_SHIP = "Mega transporter";
     private static final long TRANSPORT_SHIP_CAPACITY = 125000;
@@ -23,6 +25,8 @@ public class FleetMissions {
             throw new IllegalStateException("There is not enough ships available \"" + shipName + "\" amount " + shipAmount);
         availableShip.ifPresent(availableFleet -> availableFleet.select(shipAmount));
 
+        log.info(String.format("%s x %s selected for mission", shipAmount, shipName));
+
         return fleet;
     }
 
@@ -34,7 +38,10 @@ public class FleetMissions {
 
         if (availableShip.isEmpty())
             throw new IllegalStateException("There is no such ships available \"" + shipName + "\"");
-        availableShip.ifPresent(Fleet1.AvailableFleet::selectAll);
+        availableShip.get().selectAll();
+        int amount = availableShip.get().shipAmount();
+
+        log.info(String.format("All %s x %s selected for mission", amount, shipName));
 
         return fleet;
     }
@@ -61,6 +68,7 @@ public class FleetMissions {
                 .loadResources(transport)
                 .selectMission("Transport")
                 .next();
+        log.info(String.format("%s x %s sent on a transport mission from %s to %s. Cargo: %s", TRANSPORT_SHIP, amountOfTransportShips, fromPlanet, toPlanet, transport));
     }
 
     public void station(String fromPlanet, String toPlanet, int shipAmount, String shipName, UgamelaSession session) {
@@ -77,5 +85,6 @@ public class FleetMissions {
                 .next()
                 .selectMission("Station")
                 .next();
+        log.info(String.format("%s x %s sent on a stationing mission from %s to %s", shipName, shipAmount, fromPlanet, toPlanet));
     }
 }
