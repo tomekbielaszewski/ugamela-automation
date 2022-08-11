@@ -41,12 +41,12 @@ public class Tester {
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_CRYSTAL_MINE, 25, 30, session);
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_METAL_MINE, 27, 30, session);
 
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[3], Buildings.Building.BUILDING_LAB, 17, 19, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[4], Buildings.Building.BUILDING_LAB, 1, 19, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[5], Buildings.Building.BUILDING_LAB, 1, 19, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[6], Buildings.Building.BUILDING_LAB, 1, 19, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[7], Buildings.Building.BUILDING_LAB, 1, 19, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_LAB, 1, 19, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[3], Buildings.Building.BUILDING_NANITES_FACTORY, 17, 19, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[4], Buildings.Building.BUILDING_NANITES_FACTORY, 5, 8, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[5], Buildings.Building.BUILDING_NANITES_FACTORY, 5, 8, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[6], Buildings.Building.BUILDING_NANITES_FACTORY, 7, 8, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[7], Buildings.Building.BUILDING_NANITES_FACTORY, 5, 8, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_NANITES_FACTORY, 5, 8, session);
 
 //        for (String colony : COLONIES) {
 //            new FleetMissions().transport(MOTHERLAND, colony, new Resources(0,0,10), session);
@@ -62,6 +62,9 @@ public class Tester {
             e.printStackTrace();
             startAddress = new Address("[6:344:1]");
         }
+
+        if("9".equals(startAddress.galaxy))
+            startAddress = new Address("[1:1:1]");
 
         Farming farming = new Farming();
 
