@@ -39,6 +39,10 @@ public class Farming {
                         .map(Galaxy.Planet::spy)
                         .filter(not(MissionInfo::isSuccess))
                         .peek(p -> log.info("Unsuccessful scan: " + p.getMessage()))
+                        .peek(p -> {
+                            if(p.getMessage().startsWith("Nie masz wystarczającej ilości miejsca na deuter!"))
+                                throw new IllegalStateException(p.getMessage());
+                        })
                         .map(MissionInfo::getPlanet)
                         .toList();
                 galaxy.looseFocus();

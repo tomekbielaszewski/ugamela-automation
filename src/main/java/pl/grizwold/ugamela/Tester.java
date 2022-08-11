@@ -1,11 +1,10 @@
 package pl.grizwold.ugamela;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
-import pl.grizwold.ugamela.page.Buildings;
 import pl.grizwold.ugamela.page.Galaxy;
 import pl.grizwold.ugamela.page.model.Address;
-import pl.grizwold.ugamela.routines.Economy;
 import pl.grizwold.ugamela.routines.Farming;
 import pl.grizwold.webdriver.MultiloginWebDriver;
 
@@ -35,23 +34,26 @@ public class Tester {
 
         UgamelaSession session = new UgamelaSession($).login();
 
-//        farmWholeGalaxy(session);
+        farmWholeGalaxy(session);
 
 //        new Economy().collectResourcesFromColonies(session, "Mega transporter", MOTHERLAND, COLONIES);
 
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_SOLAR_PLANT, 27, 30, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_CRYSTAL_MINE, 25, 30, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_METAL_MINE, 27, 30, session);
+//        int desiredLevel = 34;
+//        String colony = COLONIES[8];
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_METAL_MINE, desiredLevel, desiredLevel, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_CRYSTAL_MINE, desiredLevel, desiredLevel, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_DEUTERIUM_EXTRACTOR, desiredLevel, desiredLevel, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_SOLAR_PLANT, desiredLevel, desiredLevel, session);
 
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[0], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[1], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[2], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[3], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[4], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[5], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[6], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[7], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[0], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[1], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[2], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[3], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[4], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[5], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[6], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[7], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
+//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
 //
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[3], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 16, 18, session);
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[4], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 11, 18, session);
@@ -60,14 +62,16 @@ public class Tester {
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[7], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 11, 18, session);
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 11, 18, session);
 
-//        Resources resources = new Buildings(session).upgradeCost(Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10).multiply(9);
+//        Resources resources = new Buildings(session).upgradeCost(Buildings.Building.BUILDING_SOLAR_PLANT, 35)
+//                .multiply(1);
 //        log.info(resources.toString());
 
 //        for (String colony : COLONIES) {
-//            new FleetMissions().transport(MOTHERLAND, colony, new Resources(0,0,10), session);
+//            new FleetMissions().transport(MOTHERLAND, colony, new Resources(0,0,30000000), session);
 //        }
     }
 
+    @SneakyThrows
     private static void farmWholeGalaxy(UgamelaSession session) throws InterruptedException {
         Address startAddress;
 
@@ -78,8 +82,6 @@ public class Tester {
             startAddress = new Address("[6:344:1]");
         }
 
-        if("9".equals(startAddress.galaxy))
-            startAddress = new Address("[1:1:1]");
 
         Farming farming = new Farming();
 
@@ -93,6 +95,11 @@ public class Tester {
                 log.info("Ended the cycle on " + startAddress);
                 saveAddress(startAddress);
             } catch (Exception e) {
+                if(e.getMessage().equals("Nie masz wystarczającej ilości miejsca na deuter!")) {
+                    Address beginningOfGalaxy = new Address("[1:1:1]");
+                    saveAddress(beginningOfGalaxy);
+                    startAddress = beginningOfGalaxy;
+                }
                 log.error(e.getMessage());
                 e.printStackTrace();
                 log.info("########################");
