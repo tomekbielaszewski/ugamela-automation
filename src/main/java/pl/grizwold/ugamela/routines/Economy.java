@@ -9,6 +9,10 @@ import pl.grizwold.ugamela.page.model.Resources;
 
 @Slf4j
 public class Economy {
+    public void sendResourcesForBuildingConstruction(String fromPlanet, String toPlanet, Buildings.Building building, int toLevel, UgamelaSession session) {
+        this.sendResourcesForBuildingConstruction(fromPlanet, toPlanet, building, toLevel, toLevel, session);
+    }
+
     public void sendResourcesForBuildingConstruction(String fromPlanet, String toPlanet, Buildings.Building building, int fromLevel, int toLevel, UgamelaSession session) {
         Buildings buildings = new Buildings(session).open();
 

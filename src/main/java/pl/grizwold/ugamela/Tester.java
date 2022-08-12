@@ -3,8 +3,13 @@ package pl.grizwold.ugamela;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
+import pl.grizwold.ugamela.page.Buildings;
 import pl.grizwold.ugamela.page.Galaxy;
+import pl.grizwold.ugamela.page.PlanetChooser;
+import pl.grizwold.ugamela.page.ResourcePanel;
 import pl.grizwold.ugamela.page.model.Address;
+import pl.grizwold.ugamela.page.model.Resources;
+import pl.grizwold.ugamela.routines.Economy;
 import pl.grizwold.ugamela.routines.Farming;
 import pl.grizwold.webdriver.MultiloginWebDriver;
 
@@ -22,10 +27,10 @@ public class Tester {
             /*1*/ "Venus",
             /*2*/ "Terra",
             /*3*/ "Mars",
-            /*4*/ "Neptunus",
-            /*5*/ "Uranus",
-            /*6*/ "Jupiter",
-            /*7*/ "Saturnus",
+            /*4*/ "Jupiter",
+            /*5*/ "Saturnus",
+            /*6*/ "Uranus",
+            /*7*/ "Neptunus",
             /*8*/ "Pluto"
     };
 
@@ -34,27 +39,41 @@ public class Tester {
 
         UgamelaSession session = new UgamelaSession($).login();
 
-        farmWholeGalaxy(session);
+        new PlanetChooser(session).openPlanet(MOTHERLAND);
+        Resources resourcesBefore = new ResourcePanel(session).availableResources();
+
+//        farmWholeGalaxy(session);
 
 //        new Economy().collectResourcesFromColonies(session, "Mega transporter", MOTHERLAND, COLONIES);
 
-//        int desiredLevel = 34;
-//        String colony = COLONIES[8];
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_METAL_MINE, desiredLevel, desiredLevel, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_CRYSTAL_MINE, desiredLevel, desiredLevel, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_DEUTERIUM_EXTRACTOR, desiredLevel, desiredLevel, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_SOLAR_PLANT, desiredLevel, desiredLevel, session);
+        int desiredLevel = 38;
+        String colony = COLONIES[8];
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_METAL_MINE, desiredLevel, desiredLevel, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_CRYSTAL_MINE, desiredLevel, desiredLevel, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_DEUTERIUM_EXTRACTOR, desiredLevel, desiredLevel, session);
+        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_SOLAR_PLANT, desiredLevel, desiredLevel, session);
 
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[0], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[1], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[2], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[3], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[4], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[5], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[6], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[7], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-//        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[8], Buildings.Building.BUILDING_NANITES_FACTORY, 9, 10, session);
-//
+//        for (int i = 3; i < COLONIES.length; i++) { // Starting from Mars
+//            String colony = COLONIES[i];
+//            int desiredLevel = 36;
+//            log.info("Now supplying " + colony);
+//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_METAL_MINE, desiredLevel, desiredLevel, session);
+//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_CRYSTAL_MINE, desiredLevel, desiredLevel, session);
+//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_DEUTERIUM_EXTRACTOR, desiredLevel, desiredLevel, session);
+//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_SOLAR_PLANT, desiredLevel, desiredLevel, session);
+//        }
+
+//        for (String colony : COLONIES) {
+//            log.info("Now supplying " + colony);
+//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_DEUTERIUM_EXTRACTOR, 35, session);
+//        }
+
+//        for (int i = 3; i < COLONIES.length; i++) { // Starting from Mars
+//            String colony = COLONIES[i];
+//            log.info("Now supplying " + colony);
+//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_CRYSTAL_MINE, 35, session);
+//        }
+
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[3], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 16, 18, session);
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[4], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 11, 18, session);
 //        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, COLONIES[5], Buildings.Building.BUILDING_CRYSTAL_STORAGE, 11, 18, session);
@@ -69,6 +88,11 @@ public class Tester {
 //        for (String colony : COLONIES) {
 //            new FleetMissions().transport(MOTHERLAND, colony, new Resources(0,0,30000000), session);
 //        }
+
+        new PlanetChooser(session).openPlanet(MOTHERLAND);
+        Resources resourcesAfter = new ResourcePanel(session).availableResources();
+        log.info("Resources left on Sol: {}", resourcesAfter);
+        log.info("Resources spent: {}", resourcesBefore.subtractAllowingNegatives(resourcesAfter));
     }
 
     @SneakyThrows
@@ -95,7 +119,7 @@ public class Tester {
                 log.info("Ended the cycle on " + startAddress);
                 saveAddress(startAddress);
             } catch (Exception e) {
-                if(e.getMessage().equals("Nie masz wystarczającej ilości miejsca na deuter!")) {
+                if (e.getMessage().equals("Nie masz wystarczającej ilości miejsca na deuter!")) {
                     Address beginningOfGalaxy = new Address("[1:1:1]");
                     saveAddress(beginningOfGalaxy);
                     startAddress = beginningOfGalaxy;
@@ -110,7 +134,7 @@ public class Tester {
 
     private static void saveAddress(Address startAddress) throws IOException {
         Path path = Paths.get("./address");
-        if(!Files.exists(path)) {
+        if (!Files.exists(path)) {
             Files.createFile(path);
         }
         Files.writeString(path, startAddress.toString());
@@ -127,7 +151,7 @@ public class Tester {
         String profileId = "5973191a-25d3-4047-b5d1-0803344b965f";
         MultiloginWebDriver multiloginWebDriver = new MultiloginWebDriver(profileId);
 //        $ = multiloginWebDriver.get();
-        $ = multiloginWebDriver.apply(35271);
+        $ = multiloginWebDriver.apply(37700);
         $.manage().window().maximize();
 //        throw new IllegalStateException();
         return $;
