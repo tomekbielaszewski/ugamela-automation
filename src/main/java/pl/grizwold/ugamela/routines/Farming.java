@@ -79,7 +79,7 @@ public class Farming {
     @SneakyThrows
     public void farmFromSpyReport(SpyReports.SpyReport spyReport) {
         long capacity = 125000;
-        long minimumShips = 20;
+        long minimumShips = 50;
         long warshipAmount = 200;
         String shipName = "Mega transporter";
         String warshipName = "Okręt wojenny";
