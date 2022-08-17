@@ -2,6 +2,7 @@ package pl.grizwold.ugamela;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class UgamelaSession {
     private static final String LOGIN_URL = "https://www.ugamela.pl/";
@@ -40,5 +41,12 @@ public class UgamelaSession {
 
     public WebDriver getWebDriver() {
         return $;
+    }
+
+    public UgamelaSession selectUniversum(String uni) {
+        $.findElements(By.xpath("//select[@name='Uni']/option[contains(text(), \"" + uni + "\")]"))
+                .stream().findFirst()
+                .ifPresent(WebElement::click);
+        return this;
     }
 }
