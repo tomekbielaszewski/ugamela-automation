@@ -3,13 +3,11 @@ package pl.grizwold.ugamela;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
-import pl.grizwold.ugamela.page.Buildings;
 import pl.grizwold.ugamela.page.Galaxy;
 import pl.grizwold.ugamela.page.PlanetChooser;
 import pl.grizwold.ugamela.page.ResourcePanel;
 import pl.grizwold.ugamela.page.model.Address;
 import pl.grizwold.ugamela.page.model.Resources;
-import pl.grizwold.ugamela.routines.Economy;
 import pl.grizwold.ugamela.routines.Farming;
 import pl.grizwold.webdriver.MultiloginWebDriver;
 
@@ -20,7 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Slf4j
-public class Tester {
+public class TheBot {
     private static final String MOTHERLAND = "Sol";
     private static final String[] COLONIES = new String[]{
             /*0*/ "Mercurius",
@@ -36,22 +34,24 @@ public class Tester {
 
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         WebDriver $ = connectToBrowser();
-
-        UgamelaSession session = new UgamelaSession($).login();
+        UgamelaSession session = new UgamelaSession($)
+                .selectUniversum("Universum 1")
+                .login();
 
         new PlanetChooser(session).openPlanet(MOTHERLAND);
         Resources resourcesBefore = new ResourcePanel(session).availableResources();
 
-//        farmWholeGalaxy(session);
+        farmWholeGalaxy(session);
 
 //        new Economy().collectResourcesFromColonies(session, "Mega transporter", MOTHERLAND, COLONIES);
+//        new FleetMissions().transport(MOTHERLAND, COLONIES[8], new Resources(0, 10 * 1000000, 0), session);
 
-        int desiredLevel = 38;
-        String colony = COLONIES[8];
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_METAL_MINE, desiredLevel, desiredLevel, session);
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_CRYSTAL_MINE, desiredLevel, desiredLevel, session);
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_DEUTERIUM_EXTRACTOR, desiredLevel, desiredLevel, session);
-        new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_SOLAR_PLANT, desiredLevel, desiredLevel, session);
+//            int desiredLevel = 42;
+//            String colony = COLONIES[6];
+//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_METAL_MINE, desiredLevel, desiredLevel, session);
+//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_CRYSTAL_MINE, desiredLevel, desiredLevel, session);
+//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_DEUTERIUM_EXTRACTOR, desiredLevel, desiredLevel, session);
+//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_SOLAR_PLANT, desiredLevel, desiredLevel, session);
 
 //        for (int i = 3; i < COLONIES.length; i++) { // Starting from Mars
 //            String colony = COLONIES[i];
@@ -91,8 +91,9 @@ public class Tester {
 
         new PlanetChooser(session).openPlanet(MOTHERLAND);
         Resources resourcesAfter = new ResourcePanel(session).availableResources();
-        log.info("Resources left on Sol: {}", resourcesAfter);
-        log.info("Resources spent: {}", resourcesBefore.subtractAllowingNegatives(resourcesAfter));
+        log.info("");
+        log.info("Resources on Sol now: {}", resourcesAfter);
+        log.info("Resources after bot activity: {}", resourcesAfter.subtractAllowingNegatives(resourcesBefore));
     }
 
     @SneakyThrows
@@ -105,7 +106,6 @@ public class Tester {
             e.printStackTrace();
             startAddress = new Address("[6:344:1]");
         }
-
 
         Farming farming = new Farming();
 
@@ -141,19 +141,34 @@ public class Tester {
     }
 
     private static Address readAddress() throws IOException {
-        String file = Files.readString(Paths.get("./address"));
-        return new Address(file);
+        String contents = Files.readString(Paths.get("./address"));
+        return new Address(contents);
     }
 
-    private static WebDriver connectToBrowser() {
-        WebDriver $;
+    private static int readPort() throws IOException {
+        String contents = Files.readString(Paths.get("./webdriver-port"));
+        return Integer.parseInt(contents);
+    }
 
+    private static void savePort(int port) throws IOException {
+        Path path = Paths.get("./webdriver-port");
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+        }
+        Files.writeString(path, String.valueOf(port));
+    }
+
+    @SneakyThrows
+    private static WebDriver connectToBrowser() {
         String profileId = "5973191a-25d3-4047-b5d1-0803344b965f";
-        MultiloginWebDriver multiloginWebDriver = new MultiloginWebDriver(profileId);
-//        $ = multiloginWebDriver.get();
-        $ = multiloginWebDriver.apply(37700);
-        $.manage().window().maximize();
-//        throw new IllegalStateException();
+        MultiloginWebDriver mla = new MultiloginWebDriver(profileId);
+        int port = readPort();
+
+        WebDriver $ = mla.connect(port)
+                .orElseGet(mla::startAndConnect);
+
+        savePort(mla.port);
+
         return $;
     }
 }
