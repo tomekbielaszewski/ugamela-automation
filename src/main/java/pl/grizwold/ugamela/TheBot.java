@@ -118,12 +118,22 @@ public class TheBot {
     }
 
     private static Address readAddress() throws IOException {
-        String contents = Files.readString(Paths.get("./address"));
+        Path path = Paths.get("./address");
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+            return new Address("[1:1:1]");
+        }
+        String contents = Files.readString(path);
         return new Address(contents);
     }
 
     private static int readPort() throws IOException {
-        String contents = Files.readString(Paths.get("./webdriver-port"));
+        Path path = Paths.get("./webdriver-port");
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+            return 10000;
+        }
+        String contents = Files.readString(path);
         return Integer.parseInt(contents);
     }
 
