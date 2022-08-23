@@ -114,7 +114,7 @@ public class TheBot {
         if (!Files.exists(path)) {
             saveAddress(new Address("[1:1:1]"));
         }
-        String contents = Files.readString(path);
+        String contents = Files.readString(path).trim();
         return new Address(contents);
     }
 
@@ -131,7 +131,7 @@ public class TheBot {
         if (!Files.exists(path)) {
             savePort(10000);
         }
-        String contents = Files.readString(path);
+        String contents = Files.readString(path).trim();
         return Integer.parseInt(contents);
     }
 
