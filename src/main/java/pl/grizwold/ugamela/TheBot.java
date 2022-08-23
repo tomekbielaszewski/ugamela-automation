@@ -109,6 +109,15 @@ public class TheBot {
         }
     }
 
+    private static Address readAddress() throws IOException {
+        Path path = Paths.get("./address");
+        if (!Files.exists(path)) {
+            saveAddress(new Address("[1:1:1]"));
+        }
+        String contents = Files.readString(path);
+        return new Address(contents);
+    }
+
     private static void saveAddress(Address startAddress) throws IOException {
         Path path = Paths.get("./address");
         if (!Files.exists(path)) {
@@ -117,21 +126,10 @@ public class TheBot {
         Files.writeString(path, startAddress.toString());
     }
 
-    private static Address readAddress() throws IOException {
-        Path path = Paths.get("./address");
-        if (!Files.exists(path)) {
-            Files.createFile(path);
-            return new Address("[1:1:1]");
-        }
-        String contents = Files.readString(path);
-        return new Address(contents);
-    }
-
     private static int readPort() throws IOException {
         Path path = Paths.get("./webdriver-port");
         if (!Files.exists(path)) {
-            Files.createFile(path);
-            return 10000;
+            savePort(10000);
         }
         String contents = Files.readString(path);
         return Integer.parseInt(contents);
