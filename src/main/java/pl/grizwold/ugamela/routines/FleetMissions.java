@@ -13,6 +13,7 @@ import java.util.Optional;
 public class FleetMissions {
     private static final String TRANSPORT_SHIP = "Mega transporter";
     private static final long TRANSPORT_SHIP_CAPACITY = 125000;
+    private static final long TRANSPORT_SHIP_CONSUMPTION = 500;
 
     public Fleet1 chooseGivenAmountOfShips(long shipAmount, String shipName, Fleet1 fleet) {
         Optional<Fleet1.AvailableFleet> availableShip = fleet.availableShips()
