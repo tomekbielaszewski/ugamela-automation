@@ -75,31 +75,32 @@ public class TheBot {
 
     @SneakyThrows
     private static void farmWholeGalaxy(UgamelaSession session) throws InterruptedException {
-        Address startAddress;
+        Address startAddress = Address.BEGINNING_OF_GALAXY;
 
         try {
             startAddress = readAddress();
         } catch (IOException e) {
             e.printStackTrace();
-            startAddress = new Address("[6:344:1]");
         }
 
         Farming farming = new Farming();
+        Galaxy.GALAXY_WAIT_TIMEOUT = 5;
 
         while (true) {
             try {
                 log.info("Starting the cycle from " + startAddress);
                 farming.farmFromSpyReports(session);
-                Galaxy.GALAXY_WAIT_TIMEOUT = 5;
                 Galaxy galaxy = new Galaxy(session).goTo(startAddress);
                 startAddress = farming.scanGalaxy(10, 30, galaxy);
                 log.info("Ended the cycle on " + startAddress);
                 saveAddress(startAddress);
             } catch (Exception e) {
                 if (e.getMessage().equals("Nie masz wystarczającej ilości miejsca na deuter!")) {
-                    Address beginningOfGalaxy = new Address("[1:1:1]");
-                    saveAddress(beginningOfGalaxy);
-                    startAddress = beginningOfGalaxy;
+                    saveAddress(Address.BEGINNING_OF_GALAXY);
+                    startAddress = Address.BEGINNING_OF_GALAXY;
+                }
+                if (e.getMessage().equals("Nie masz żadnych sond szpiegowskich!")) {
+                    // TODO: Buy spy probes
                 }
                 log.error(e.getMessage());
                 e.printStackTrace();
@@ -112,7 +113,8 @@ public class TheBot {
     private static Address readAddress() throws IOException {
         Path path = Paths.get("./address");
         if (!Files.exists(path)) {
-            saveAddress(new Address("[1:1:1]"));
+            log.info("Address file did not exist. Creating new one with default starting point: {}", Address.BEGINNING_OF_GALAXY);
+            saveAddress(Address.BEGINNING_OF_GALAXY);
         }
         String contents = Files.readString(path).trim();
         return new Address(contents);
@@ -123,12 +125,14 @@ public class TheBot {
         if (!Files.exists(path)) {
             Files.createFile(path);
         }
+        log.info("Saving address: {}", startAddress);
         Files.writeString(path, startAddress.toString());
     }
 
     private static int readPort() throws IOException {
         Path path = Paths.get("./webdriver-port");
         if (!Files.exists(path)) {
+            log.info("Web Driver port file did not exist. Creating new one with default value: 10000");
             savePort(10000);
         }
         String contents = Files.readString(path).trim();
@@ -140,6 +144,7 @@ public class TheBot {
         if (!Files.exists(path)) {
             Files.createFile(path);
         }
+        log.info("Saving Web Driver port {}", port);
         Files.writeString(path, String.valueOf(port));
     }
 

@@ -1,8 +1,6 @@
 package pl.grizwold.ugamela.page.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,6 +8,7 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class Address {
     private static final String ADDRESS_PATTERN = "\\[(?<galaxy>[\\d]+):(?<system>[\\d]+):(?<planet>[\\d]+)]"; // [1:123:3]
+    public static final Address BEGINNING_OF_GALAXY = new Address("[1:1:1]");
 
     public final String galaxy;
     public final String system;
