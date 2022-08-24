@@ -158,7 +158,8 @@ public class Galaxy extends Page {
             if (getAddress().galaxy.equals(galaxy))
                 return this;
             WebElement galaxyFormInput = galaxyFormInput();
-            galaxyFormInput.sendKeys(Keys.LEFT_SHIFT, "a");
+            galaxyFormInput.sendKeys(Keys.LEFT_SHIFT, Keys.ARROW_UP);
+            galaxyFormInput.sendKeys(Keys.DELETE);
             galaxyFormInput.sendKeys(galaxy);
             return this;
         }
@@ -167,7 +168,8 @@ public class Galaxy extends Page {
             if (getAddress().system.equals(system))
                 return this;
             WebElement galaxyFormInput = systemFormInput();
-            galaxyFormInput.sendKeys(Keys.LEFT_SHIFT, "a");
+            galaxyFormInput.sendKeys(Keys.LEFT_SHIFT, Keys.ARROW_UP);
+            galaxyFormInput.sendKeys(Keys.DELETE);
             galaxyFormInput.sendKeys(system);
             return this;
         }
