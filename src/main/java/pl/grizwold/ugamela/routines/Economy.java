@@ -27,6 +27,7 @@ public class Economy {
         FleetMissions fleetMissions = new FleetMissions();
 
         for (String colony : colonies) {
+            log.info("Collecting resources from {}", colony);
             planetChooser.openPlanet(colony);
             Fleet1 fleet1 = new Fleet1(session);
             fleetMissions.chooseAllShips(shipName, fleet1)
