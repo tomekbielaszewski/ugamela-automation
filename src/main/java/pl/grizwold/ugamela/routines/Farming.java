@@ -36,7 +36,7 @@ public class Farming {
                         .filter(Galaxy.Planet::isEnemy)
                         .filter(Galaxy.Planet::isLongInactive)
                         .peek(p -> log.info("Scanning " + p.name + " at " + p.address))
-                        .map(Galaxy.Planet::spy)
+                        .map(Galaxy.Planet::spyJs)
                         .filter(not(MissionInfo::isSuccess))
                         .peek(p -> log.info("Unsuccessful scan: " + p.getMessage()))
                         .peek(p -> {
