@@ -59,7 +59,8 @@ public class TheBot {
 //        COLONIES = Arrays.copyOfRange(COLONIES, 6, COLONIES.length);
 //        for (String colony : COLONIES) {
 //            log.info("Now supplying " + colony);
-//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_METAL_MINE, 44, session);
+//            Resources additionalResources = new Resources(0,0,60 * 1000000);
+//            new Economy().sendResourcesForBuildingConstruction(MOTHERLAND, colony, Buildings.Building.BUILDING_LAB, 24, additionalResources, session);
 //        }
 
 //        for (String colony : COLONIES) {

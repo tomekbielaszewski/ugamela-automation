@@ -10,13 +10,18 @@ import pl.grizwold.ugamela.page.model.Resources;
 @Slf4j
 public class Economy {
     public void sendResourcesForBuildingConstruction(String fromPlanet, String toPlanet, Buildings.Building building, int toLevel, UgamelaSession session) {
-        this.sendResourcesForBuildingConstruction(fromPlanet, toPlanet, building, toLevel, toLevel, session);
+        this.sendResourcesForBuildingConstruction(fromPlanet, toPlanet, building, toLevel, toLevel, new Resources(), session);
     }
 
-    public void sendResourcesForBuildingConstruction(String fromPlanet, String toPlanet, Buildings.Building building, int fromLevel, int toLevel, UgamelaSession session) {
+    public void sendResourcesForBuildingConstruction(String fromPlanet, String toPlanet, Buildings.Building building, int toLevel, Resources additionalResources, UgamelaSession session) {
+        this.sendResourcesForBuildingConstruction(fromPlanet, toPlanet, building, toLevel, toLevel, additionalResources, session);
+    }
+
+    public void sendResourcesForBuildingConstruction(String fromPlanet, String toPlanet, Buildings.Building building, int fromLevel, int toLevel, Resources additionalResources,  UgamelaSession session) {
         Buildings buildings = new Buildings(session).open();
 
-        Resources buildingsCost = buildings.upgradeCost(building, fromLevel, toLevel);
+        Resources buildingsCost = buildings.upgradeCost(building, fromLevel, toLevel)
+                .add(additionalResources);
         log.info(String.format("Upgrade of %s from %s to %s will cost: %s", building, fromLevel, toLevel, buildingsCost));
         FleetMissions mission = new FleetMissions();
         mission.transport(fromPlanet, toPlanet, buildingsCost, session);
