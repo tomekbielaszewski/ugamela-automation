@@ -3,6 +3,7 @@ package pl.grizwold.ugamela.page;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -103,6 +104,17 @@ public class Galaxy extends Page {
             }
 
             planet.findElement(By.className("icoSpy")).click();
+            return Galaxy.this.getMissionStatus(this);
+        }
+
+        public MissionInfo spyJs() {
+            String script = """
+                    var galaxy = arguments[0];
+                    var system = arguments[1];
+                    var planet = arguments[2];
+                    sendShips(1, galaxy, system, planet, 1);
+                    """;
+            ((JavascriptExecutor) $()).executeScript(script, this.address.galaxy, this.address.system, this.address.planet);
             return Galaxy.this.getMissionStatus(this);
         }
     }
